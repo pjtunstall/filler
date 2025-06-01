@@ -3,6 +3,7 @@ use std::io;
 
 use crate::bimap::BiMap;
 use crate::parse;
+use crate::symbols;
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug, Hash)]
 enum Cell {
@@ -52,7 +53,7 @@ impl fmt::Display for Anfield {
 
         write!(
             f,
-            "own_symbol: {}, opponent_symbol: {}, own_latest_move: {}, opponent_latest_move: {}\n",
+            "own_symbol: {}, opponent_symbol: {}, own_latest_move: {}, opponent_latest_move: {}",
             self.own_symbol, self.opponent_symbol, self.own_latest_move, self.opponent_latest_move
         )
     }
@@ -64,7 +65,7 @@ impl Anfield {
         let [own_latest_move, opponent_latest_move] = Self::assign_latest_move_symbols(own_id);
 
         let mut symbols = BiMap::new();
-        symbols.insert('.', Cell::Empty);
+        symbols.insert(symbols::EMPTY, Cell::Empty);
         symbols.insert(own_symbol, Cell::OwnSymbol);
         symbols.insert(opponent_symbol, Cell::OpponentSymbol);
         symbols.insert(own_latest_move, Cell::OwnLatestMove);
@@ -83,11 +84,19 @@ impl Anfield {
     }
 
     pub fn assign_symbols(own_id: u8) -> [char; 2] {
-        if own_id == 1 { ['@', '$'] } else { ['$', '@'] }
+        if own_id == 1 {
+            [symbols::P1, symbols::P2]
+        } else {
+            [symbols::P2, symbols::P1]
+        }
     }
 
     pub fn assign_latest_move_symbols(own_id: u8) -> [char; 2] {
-        if own_id == 1 { ['a', 's'] } else { ['s', 'a'] }
+        if own_id == 1 {
+            [symbols::P1_LATEST_MOVE, symbols::P2_LATEST_MOVE]
+        } else {
+            [symbols::P2_LATEST_MOVE, symbols::P1_LATEST_MOVE]
+        }
     }
 
     // fn get_cell(&self, x: usize, y: usize) -> Option<Cell> {
