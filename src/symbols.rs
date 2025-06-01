@@ -3,4 +3,4 @@ pub const P2: char = '$';
 pub const P1_LATEST_MOVE: char = 'a';
 pub const P2_LATEST_MOVE: char = 's';
 pub const EMPTY: char = '.';
-pub const NEW_PIECE: char = '*';
+pub const NEW_PIECE: char = '#';
