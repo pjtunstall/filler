@@ -16,7 +16,7 @@ pub fn get_ids(line: String) -> [u8; 2] {
         .nth(10)
         .expect("Line too short")
         .to_digit(10)
-        .expect("Character at 11th position in first line is not a digit");
+        .expect("Invalid first line: character at 11th position is not a digit");
 
     if digit == 1 { [1, 2] } else { [2, 1] }
 }

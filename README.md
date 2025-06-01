@@ -63,8 +63,12 @@ Piece 5 4:
 ...#.
 ```
 
-Is this, in fact, allowed?
+Are negative coordinates accepted by the game engine though?
 
 ### Inconsistent symbols
 
-The shape cells of the example pieces in the [pieces](https://github.com/01-edu/public/tree/master/subjects/filler#the-pieces) section are all denoted by '#', but those of the example piece in the [Usage](https://github.com/01-edu/public/tree/master/subjects/filler#usage) section by 'O' (uppercase letter after 'N'). Is this intentional? I'll assume not for now, but watch out for errors when I try to parse it.
+The shape cells of the example pieces in the [pieces](https://github.com/01-edu/public/tree/master/subjects/filler#the-pieces) section are all denoted by '#', but those of the example piece in the [Usage](https://github.com/01-edu/public/tree/master/subjects/filler#usage) section by 'O' (uppercase letter after 'N'). I'm guessing this is an accidental relic of an earlier version where Player 1's symbol was 'O', as in the 42 School instructions?
+
+## Plan
+
+I could keep a list of `piece::Cell`s in own and opponent's territory, then iterate through them rather than checking all potential coordinates to place a piece. That might be faster at the start. Or it might be slower than iterating over all the coordinates, which are, after all, only numbers, not elements stored on the stack.
