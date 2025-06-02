@@ -37,14 +37,14 @@ The challenge is to defeat three of the given robots on at least four out of fiv
 This project is my attempt at the [01Edu version](https://github.com/01-edu/public/tree/master/subjects/filler) // [01Founders version](https://learn.01founders.co/intra/london/div-01/filler) of the exercise, which is the same as the [42 School version](https://github.com/VBrazhnik/Filler/blob/master/filler.en.pdf), apart from trivial differences: 42 School calls the board "plateau", while 01Edu calls it "Anfield", and different symbols are used for the territories of the two players and their latest moves:
 
 ```
-| Meaning              | 01Edu | 42 School |
-|----------------------|-------|-----------|
-| Player 1             |   @   |     O     |
-| Player 2             |   $   |     X     |
-| Player 1 latest move |   a   |     o     |
-| Player 2 latest move |   s   |     x     |
-| Empty                |   .   |     .     |
-| New piece            |   *   |     *     |
+| Meaning              |  01Edu  | 42 School |
+|----------------------|---------|-----------|
+| Player 1             |    @    |     O     |
+| Player 2             |    $    |     X     |
+| Player 1 latest move |    a    |     o     |
+| Player 2 latest move |    s    |     x     |
+| Empty                |    .    |     .     |
+| New piece            |    #[^1]|     *     |
 ```
 
 I found their instructions worth reading too, though, as they're more detailed than ours--see especially the longer example of gameplay in §V.4.3, p. 11--and randomly contain a list of the Seven Deadly Sins, complete with Biblical quotations to keep you on the right track!
@@ -69,10 +69,6 @@ Piece 5 4:
 
 Are negative coordinates accepted by the game engine though?
 
-### Inconsistent symbols
-
-The shape cells of the example pieces in the [pieces](https://github.com/01-edu/public/tree/master/subjects/filler#the-pieces) section are all denoted by '#', but those of the example piece in the [Usage](https://github.com/01-edu/public/tree/master/subjects/filler#usage) section by 'O' (uppercase letter after 'N'). I'm guessing this is an accidental relic of an earlier version where Player 1's symbol was 'O', as in the 42 School instructions?
-
 ## Plan
 
 I could keep a list of `piece::Cell`s in own and opponent's territory, then iterate through them rather than checking all potential coordinates to place a piece. That might be faster at the start. Or it might be slower than iterating over all the coordinates, which are, after all, only numbers, not elements stored on the stack.
@@ -80,3 +76,7 @@ I could keep a list of `piece::Cell`s in own and opponent's territory, then iter
 Do I really need piece::Cell as well as anfield::Node?
 
 Encapsulate access to grids as 1d arrays so there are fewer places for the calculation to go wrong.
+
+## Footnotes
+
+[^1]: The shape cells of the three example pieces in the [pieces](https://github.com/01-edu/public/tree/master/subjects/filler#the-pieces) section are all denoted by '#', but those of the example piece in the [Usage](https://github.com/01-edu/public/tree/master/subjects/filler#usage) section by 'O' (uppercase letter after 'N'). I'm guessing this is an accidental relic of an earlier version where Player 1's symbol was 'O', as in the 42 School instructions.
