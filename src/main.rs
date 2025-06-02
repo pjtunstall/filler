@@ -2,7 +2,8 @@ use std::io::{self, BufRead};
 
 use filler::anfield::Anfield;
 use filler::parse;
-use filler::piece::{self, Piece};
+use filler::piece::Piece;
+use filler::piece::Possibility;
 
 fn main() {
     let stdin = io::stdin();
@@ -20,5 +21,5 @@ fn main() {
     let next_line = parse::read_line(&mut lines, "piece header");
     let [width, height] = parse::get_width_and_height(next_line);
     let piece = Piece::new(&mut lines, width, height);
-    println!("{:?}", piece);
+    let [x, y] = anfield.place(&piece);
 }

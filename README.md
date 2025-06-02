@@ -51,6 +51,10 @@ I found their instructions worth reading too, though, as they're more detailed t
 
 ## Questions
 
+### Can pieces be rotated?
+
+I'm guessing not.
+
 ### Negative coordinates
 
 Sometimes it might be necessary for a player to send negative numbers as the coordinates of the piece (i.e. its top-left cell). Not all legitimate moves can be expressed otherwise, given the possibility of pieces such as
@@ -72,3 +76,7 @@ The shape cells of the example pieces in the [pieces](https://github.com/01-edu/
 ## Plan
 
 I could keep a list of `piece::Cell`s in own and opponent's territory, then iterate through them rather than checking all potential coordinates to place a piece. That might be faster at the start. Or it might be slower than iterating over all the coordinates, which are, after all, only numbers, not elements stored on the stack.
+
+Do I really need piece::Cell as well as anfield::Node?
+
+Encapsulate access to grids as 1d arrays so there are fewer places for the calculation to go wrong.

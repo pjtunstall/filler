@@ -5,8 +5,8 @@ use crate::symbols;
 
 #[derive(Debug)]
 pub struct Piece {
-    width: usize,
-    height: usize,
+    pub width: usize,
+    pub height: usize,
     shape: Vec<Cell>,
 }
 
@@ -27,6 +27,13 @@ impl Piece {
             shape,
         }
     }
+}
+
+#[derive(Default, Debug, Clone, Copy)]
+pub struct Possibility {
+    pub x: usize,
+    pub y: usize,
+    pub distance: usize,
 }
 
 #[derive(Debug)]
