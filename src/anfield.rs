@@ -2,9 +2,9 @@ use std::fmt;
 use std::io;
 
 use crate::bimap::BiMap;
+use crate::cell::Cell;
 use crate::parse;
 use crate::piece::{Piece, PossiblePlacement};
-use crate::point::Point;
 use crate::symbols::{self, CellRole, Chars};
 
 #[derive(Debug)]
@@ -122,7 +122,7 @@ impl Anfield {
         let mut q = Vec::new();
         let mut visited = vec![false; self.cells.len()];
         visited[y * self.width + x] = true;
-        q.push(Point { x, y });
+        q.push(Cell { x, y });
 
         while !q.is_empty() {
             let p = q.pop().unwrap();
@@ -149,7 +149,7 @@ impl Anfield {
         distance
     }
 
-    fn try_visit(&self, q: &mut Vec<Point>, visited: &mut Vec<bool>, s: usize, t: usize) {
+    fn try_visit(&self, q: &mut Vec<Cell>, visited: &mut Vec<bool>, s: usize, t: usize) {
         if visited[t * self.width + s] {
             return;
         }
@@ -158,7 +158,7 @@ impl Anfield {
             _ => (),
         }
         visited[t * self.width + s] = true;
-        q.push(Point { x: s, y: t });
+        q.push(Cell { x: s, y: t });
     }
 
     fn get_cell(&self, x: usize, y: usize) -> Option<CellRole> {

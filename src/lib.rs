@@ -1,6 +1,6 @@
 pub mod anfield;
 pub mod bimap;
+pub mod cell;
 pub mod parse;
 pub mod piece;
-pub mod point;
 pub mod symbols;

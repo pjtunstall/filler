@@ -1,5 +1,5 @@
 #[derive(Debug)]
-pub struct Point {
+pub struct Cell {
     pub x: usize,
     pub y: usize,
 }
