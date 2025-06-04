@@ -1,13 +1,14 @@
 use std::io;
 
 use crate::parse;
+use crate::point::Point;
 use crate::symbols;
 
 #[derive(Debug)]
 pub struct Piece {
     pub width: usize,
     pub height: usize,
-    shape: Vec<Cell>,
+    shape: Vec<Point>,
 }
 
 impl Piece {
@@ -30,25 +31,19 @@ impl Piece {
 }
 
 #[derive(Default, Debug, Clone, Copy)]
-pub struct Possibility {
+pub struct PossiblePlacement {
     pub x: usize,
     pub y: usize,
-    pub distance: usize,
+    pub distance_to_opponent: usize,
 }
 
-#[derive(Debug)]
-struct Cell {
-    x: usize,
-    y: usize,
-}
-
-fn parse(raw: Vec<String>) -> Vec<Cell> {
+fn parse(raw: Vec<String>) -> Vec<Point> {
     let mut shape = Vec::new();
 
     for (x, line) in raw.iter().enumerate() {
         for (y, c) in line.chars().enumerate() {
-            if c == symbols::NEW_PIECE {
-                shape.push(Cell { y, x });
+            if c == symbols::NEW_PIECE_CHAR {
+                shape.push(Point { y, x });
             }
         }
     }

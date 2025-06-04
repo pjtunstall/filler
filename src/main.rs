@@ -3,7 +3,7 @@ use std::io::{self, BufRead};
 use filler::anfield::Anfield;
 use filler::parse;
 use filler::piece::Piece;
-use filler::piece::Possibility;
+use filler::piece::PossiblePlacement;
 
 fn main() {
     let stdin = io::stdin();

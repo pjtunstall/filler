@@ -15,7 +15,6 @@ impl<K: Eq + std::hash::Hash + Clone, V: Eq + std::hash::Hash + Clone> BiMap<K, 
     }
 
     pub fn insert(&mut self, k: K, v: V) -> Option<(K, V)> {
-        // Remove any existing mappings
         if let Some(old_v) = self.forward.insert(k.clone(), v.clone()) {
             self.backward.remove(&old_v);
         }
