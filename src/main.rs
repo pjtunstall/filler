@@ -1,4 +1,4 @@
-use std::io::{self, BufRead};
+use std::io::{self, BufRead, Write};
 
 use filler::anfield::Anfield;
 use filler::parse;
@@ -13,9 +13,18 @@ pub struct Game<S: Strategy> {
 
 impl<S: Strategy> Game<S> {
     fn play(&mut self, piece: &Piece) {
-        if let Some(mv) = self.strategy.choose_move(&self.anfield, piece) {
-            println!("Move chosen: {:?}", mv);
+        let s;
+        if let Some((x, y)) = self.strategy.choose_move(&self.anfield, piece) {
+            s = format!("{} {}\n", x, y);
+        } else {
+            s = String::from("0 0\n");
         }
+        io::stdout()
+            .write_all(s.as_bytes())
+            .expect("Failed to write move to stdout (broken pipe or closed output?)");
+        io::stdout()
+            .flush()
+            .expect("Failed to flush stdout (broken pipe or output stream error?)");
     }
 }
 
