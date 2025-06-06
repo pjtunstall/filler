@@ -2,16 +2,14 @@ use std::fmt;
 use std::io;
 
 use crate::bimap::BiMap;
-use crate::cell::Cell;
 use crate::parse;
-use crate::piece::{Piece, PossiblePlacement};
 use crate::symbols::{self, CellRole, Chars};
 
 #[derive(Debug)]
 pub struct Anfield {
     pub width: usize,
     pub height: usize,
-    cells: Vec<CellRole>, // Row-major order, cells[y * width + x].
+    pub cells: Vec<CellRole>, // Row-major order, cells[y * width + x].
     own_char: char,
     opponent_char: char,
     own_latest_char: char,
@@ -74,94 +72,7 @@ impl Anfield {
         }
     }
 
-    pub fn place(&self, piece: &Piece) -> [usize; 2] {
-        let possible_placements = self.get_possible_placements(&piece);
-        let mut chosen_possible_placement = possible_placements[0];
-        for possible_placement in possible_placements.iter().skip(1) {
-            if possible_placement.distance_to_opponent
-                > chosen_possible_placement.distance_to_opponent
-            {
-                chosen_possible_placement = *possible_placement;
-            }
-        }
-        let x = chosen_possible_placement.x;
-        let y = chosen_possible_placement.y;
-        [x, y]
-    }
-
-    fn get_possible_placements(&self, piece: &Piece) -> Vec<PossiblePlacement> {
-        let mut possible_placements = Vec::new();
-        for x in 0..(self.width - piece.width) {
-            for y in 0..(self.height - piece.height) {
-                if let Some(mut possible_placement) = self.try_fit(&piece, x, y) {
-                    possible_placement.distance_to_opponent =
-                        self.get_distance_to_opponent(possible_placement.x, possible_placement.y);
-                    possible_placements.push(possible_placement);
-                }
-            }
-        }
-        if possible_placements.len() == 0 {
-            possible_placements.push(PossiblePlacement::default());
-        }
-        possible_placements
-    }
-
-    fn try_fit(&self, _piece: &Piece, _x: usize, _y: usize) -> Option<PossiblePlacement> {
-        // TODO: iterate over all possible coordinates and check,
-        // for each cell in the shape, if it's out of bounds. If not,
-        // check if any of its cells overlap with our own territory.
-        // If so, iterate over all cells in the shape and
-        // check if they would overlap with the opponent's territory
-        // or if they'd be a second cell overlapping with our own.
-        // If all checks pass, return Some(PossiblePlacement).
-        None
-    }
-
-    fn get_distance_to_opponent(&self, x: usize, y: usize) -> usize {
-        let mut distance = 0;
-        let mut q = Vec::new();
-        let mut visited = vec![false; self.cells.len()];
-        visited[y * self.width + x] = true;
-        q.push(Cell { x, y });
-
-        while !q.is_empty() {
-            let p = q.pop().unwrap();
-            match self.get_cell(p.x, p.y) {
-                Some(CellRole::OpponentSymbol) | Some(CellRole::OpponentLatestMove) => break,
-                _ => (),
-            }
-            distance += 1;
-
-            if p.x > 0 {
-                self.try_visit(&mut q, &mut visited, p.x - 1, p.y);
-            }
-            if p.x < self.width - 1 {
-                self.try_visit(&mut q, &mut visited, p.x + 1, p.y);
-            }
-            if p.y > 0 {
-                self.try_visit(&mut q, &mut visited, p.x, p.y - 1);
-            }
-            if p.y < self.height - 1 {
-                self.try_visit(&mut q, &mut visited, p.x, p.y + 1);
-            }
-        }
-
-        distance
-    }
-
-    fn try_visit(&self, q: &mut Vec<Cell>, visited: &mut Vec<bool>, s: usize, t: usize) {
-        if visited[t * self.width + s] {
-            return;
-        }
-        match self.get_cell(s, t) {
-            Some(CellRole::OwnSymbol) | Some(CellRole::OwnLatestMove) => return,
-            _ => (),
-        }
-        visited[t * self.width + s] = true;
-        q.push(Cell { x: s, y: t });
-    }
-
-    fn get_cell(&self, x: usize, y: usize) -> Option<CellRole> {
+    pub fn get_cell_role(&self, x: usize, y: usize) -> Option<CellRole> {
         if x < self.width && y < self.height {
             Some(self.cells[y * self.width + x])
         } else {
@@ -169,9 +80,9 @@ impl Anfield {
         }
     }
 
-    fn set_cell(&mut self, x: usize, y: usize, cell: CellRole) {
+    fn set_cell(&mut self, x: usize, y: usize, cell_role: CellRole) {
         if x < self.width && y < self.height {
-            self.cells[y * self.width + x] = cell;
+            self.cells[y * self.width + x] = cell_role;
         }
     }
 

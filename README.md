@@ -71,7 +71,11 @@ Are negative coordinates accepted by the game engine though?
 
 ## Plan
 
-I could keep a list of `piece::Point`s in own and opponent's territory, then iterate through them rather than checking all potential coordinates to place a piece. That might be faster at the start. Or it might be slower than iterating over all the coordinates, which are, after all, only numbers, not structs stored on the heap.
+Strategy: Place the piece as close to the opponent's territory as possible, hence move our territory towards the opponent's and surround them. A refinement could be, after the opponet is immobilized, to try to pack our pieces in as small a space as possible; alternatively with as few holes as possible.
+
+Extract `place` from `anfield` as a trait method so that it can easily be swapped for a different strategy.
+
+I could keep a list of `cell::Cell`s in own and opponent's territory, then iterate through them rather than checking all potential coordinates to place a piece. That might be faster at the start. Or it might be slower than iterating over all the coordinates, which are, after all, only numbers, not structs stored on the heap. (But think of clarity over speed for now; only think of speed if you have to.)
 
 Encapsulate access to grids as 1d arrays so there are fewer places for the calculation to go wrong.
 

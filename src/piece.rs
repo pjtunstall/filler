@@ -8,7 +8,7 @@ use crate::symbols;
 pub struct Piece {
     pub width: usize,
     pub height: usize,
-    shape: Vec<Cell>,
+    pub shape: Vec<Cell>,
 }
 
 impl Piece {

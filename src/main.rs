@@ -3,7 +3,21 @@ use std::io::{self, BufRead};
 use filler::anfield::Anfield;
 use filler::parse;
 use filler::piece::Piece;
-use filler::piece::PossiblePlacement;
+use filler::strategy::Strategy;
+use filler::strategy::attack::Attack;
+
+pub struct Game<S: Strategy> {
+    anfield: Anfield,
+    strategy: S,
+}
+
+impl<S: Strategy> Game<S> {
+    fn play(&mut self, piece: &Piece) {
+        if let Some(mv) = self.strategy.choose_move(&self.anfield, piece) {
+            println!("Move chosen: {:?}", mv);
+        }
+    }
+}
 
 fn main() {
     let stdin = io::stdin();
@@ -14,12 +28,15 @@ fn main() {
 
     let [own_id, _opponent_id] = parse::get_ids(first_line);
     let [width, height] = parse::get_width_and_height(second_line);
-    let mut anfield = Anfield::new(width, height, own_id);
+    let anfield = Anfield::new(width, height, own_id);
 
-    // Every turn:
-    anfield.parse(&mut lines);
+    let strategy = Attack;
+    let mut game = Game { anfield, strategy };
+
+    // Each turn:
+    game.anfield.parse(&mut lines);
     let next_line = parse::read_line(&mut lines, "piece header");
     let [width, height] = parse::get_width_and_height(next_line);
     let piece = Piece::new(&mut lines, width, height);
-    let [x, y] = anfield.place(&piece);
+    game.play(&piece);
 }
