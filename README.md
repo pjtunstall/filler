@@ -83,6 +83,18 @@ docker build -t filler .
 docker run -v "$(pwd)/solution":/filler/solution -it filler
 ```
 
+Move the visualizer executable as follows:
+
+```bash
+mv ../visualizer/target/x86_64-unknown-linux-musl/release/visualizer ../filler./docker_image
+```
+
+To run a game with the visualizer:
+
+```bash
+docker run -v "$(pwd)/solution":/filler/solution -it filler | ./visualizer
+```
+
 ## Questions
 
 ### Can pieces be rotated?
@@ -133,9 +145,10 @@ Can empty cells of pieces exceed the bottom or right edges of the Anfield, just 
 
 ## Todo
 
+- Test visualizer on real examples.
+  - Use it to study the terminator.
 - Allow negative cordinates, being careful to avooid out-of-bounds errors.
 - Allow pieces to be placed in such a way that at least their empty cells go off the right or bottom edge.
   - Likewise nonempty cells if that's possible; check it.
 - Write tests.
-- Create a visualizer.
 - Beat Terminator.
