@@ -147,6 +147,7 @@ Can empty cells of pieces exceed the bottom or right edges of the Anfield, just 
 
 - Test visualizer on real examples.
   - Use it to study the terminator.
+  - Maybe let the scale be adjusted with a flag.
 - Allow negative cordinates, being careful to avooid out-of-bounds errors.
 - Allow pieces to be placed in such a way that at least their empty cells go off the right or bottom edge.
   - Likewise nonempty cells if that's possible; check it.
