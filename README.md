@@ -5,7 +5,7 @@
 
 ## Context
 
-This project is an implementation of the [01Edu version](https://github.com/01-edu/public/tree/master/subjects/filler) of an exercise called filler. The challenge is to create a bot that can compete against others in a game of placing variously shapes on a rectangular playing area. We're given several executable files: a "game engine" and four AI opponents. When run with the appropriate command-line arguments, the game engine will run the student bot together with one of the given bots. It will send random shapes (like generalized Tetris shapes) to each bot in turn along with the current state of the board. The bot must place this shape on the board in such a way that precisely one cell (character) of the new shape overlaps with one of the shapes it placed previously, thus increasing its territory. It mustn't overlap any cell of any of the opponent's territory.
+This project is an implementation of the [01Edu version](https://github.com/01-edu/public/tree/master/subjects/filler) of an exercise called filler. The challenge is to create a bot that can compete against others in a game of placing variously shapes on a rectangular playing area. We're given several executable files: a so-called "game engine" and four AI opponents. When run with the appropriate command-line arguments, the game engine will run the student bot together with one of the given bots. It will send random shapes (like generalized Tetris shapes) to each bot in turn along with the current state of the board. The bot must place this shape on the board in such a way that precisely one cell (character) of the new shape overlaps with one of the shapes it placed previously, thus increasing its territory. It mustn't overlap any cell of any of the opponent's territory.
 
 Points are awarded for every shape placed. The instructions don't say whether shapes are worth equal points.
 
@@ -60,14 +60,14 @@ git clone https://github.com/pjtunstall/filler
 cd filler
 ```
 
-Compile the executable file statically:
+Compile the executable file statically, e.g. for the target platform `x86_64-unknown-linux-musl`:
 
 ```bash
 rustup target add x86_64-unknown-linux-musl
 cargo build --release --target x86_64-unknown-linux-musl
 ```
 
-The reason for static compilation is that the docker container provided has an old version of libc, which caused the dynamic linker to fail to load my binary otherwise. Then move the binary as follows:
+(Adjust according to your platform.) The reason for static compilation is that the docker container provided has an old version of libc, which caused the dynamic linker to fail to load my binary otherwise. Then move the binary as follows:
 
 ```bash
 mv target/x86_64-unknown-linux-musl/release/filler ../filler./docker_image/solution/
@@ -87,7 +87,11 @@ docker run -v "$(pwd)/solution":/filler/solution -it filler
 
 ### Can pieces be rotated?
 
-Apparently not. There's no way to express it.
+Apparently not. There's no way to express it to the game engine.
+
+### Exit strategy
+
+Should one's bot exit after playing its final move? No.
 
 ### Negative coordinates
 
@@ -101,16 +105,16 @@ Piece 5 4:
 ...#.
 ```
 
-Are negative coordinates accepted by the game engine though? At least it seems that the given bot terminator chooses invalid coordinates rather than negative ones, as can be seen by trying this random seed.
+Are negative coordinates accepted by the game engine? The instructions are silent on this point. It seems that the given bot terminator chooses invalid coordinates rather than negative ones, as can be seen by trying this random seed.
 
 ```
 ./linux_game_engine -f maps/map01 -p2 solution/filler -p1 linux_robots/terminator -s 1749393971253574634
 
 ```
 
-I wonder if the audit requirement to change "the position of the players each time so that the student player can be the p1 and the p2" is to ensure that players have a roughly similar chance of getting stuck on the first move.
+I did wonder if the audit requirement to change "the position of the players each time so that the student player can be the p1 and the p2" was meant to ensure that players have a roughly similar chance of getting stuck on the first move.
 
-Revised opinion: negative coordinates are admitted. Swapping the labels of the two players in the example above and having one's own bot move output 4 -1 for the first move allows it to place
+Any yet, negative coordinates are admitted! Swapping the labels of the two players in the example above and having one's own bot move output 4 -1 for the first move allows it to place
 
 ```
 .....
@@ -123,6 +127,15 @@ OO...
 
 on its initial cell, 4 3.
 
-### Exit strategy
+### Botton-right rules
 
-Should the bot exit after playing its final move? Not necessary.
+Can empty cells of pieces exceed the bottom or right edges of the Anfield, just as they can be negative? Can nonempty cells do so?
+
+## Todo
+
+- Allow negative cordinates, being careful to avooid out-of-bounds errors.
+- Allow pieces to be placed in such a way that at least their empty cells go off the right or bottom edge.
+  - Likewise nonempty cells if that's possible; check it.
+- Write tests.
+- Create a visualizer.
+- Beat Terminator.
