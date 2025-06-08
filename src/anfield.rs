@@ -86,46 +86,6 @@ impl Anfield {
         }
     }
 
-    // fn is_empty(&self, x: usize, y: usize) -> bool {
-    //     self.get_cell(x, y) == Some(Cell::Empty)
-    // }
-
-    // fn is_occupied(&self, x: usize, y: usize) -> bool {
-    //     self.get_cell(x, y) != Some(Cell::Empty)
-    // }
-
-    // fn is_own_char(&self, x: usize, y: usize) -> bool {
-    //     self.get_cell(x, y) == Some(Cell::OwnCellRole)
-    // }
-
-    // fn is_opponent_char(&self, x: usize, y: usize) -> bool {
-    //     self.get_cell(x, y) == Some(Cell::OpponentCellRole)
-    // }
-
-    // fn is_own_latest_char(&self, x: usize, y: usize) -> bool {
-    //     self.get_cell(x, y) == Some(Cell::OwnLatestMove)
-    // }
-
-    // fn is_opponent_latest_char(&self, x: usize, y: usize) -> bool {
-    //     self.get_cell(x, y) == Some(Cell::OpponentLatestMove)
-    // }
-
-    // fn set_own_latest_char(&mut self, x: usize, y: usize) {
-    //     self.set_cell(x, y, Cell::OwnLatestMove);
-    // }
-
-    // fn set_opponent_latest_char(&mut self, x: usize, y: usize) {
-    //     self.set_cell(x, y, Cell::OpponentLatestMove);
-    // }
-
-    // fn set_own_char(&mut self, x: usize, y: usize) {
-    //     self.set_cell(x, y, Cell::OwnCellRole);
-    // }
-
-    // fn set_opponent_char(&mut self, x: usize, y: usize) {
-    //     self.set_cell(x, y, Cell::OpponentCellRole);
-    // }
-
     fn parse_cell(&mut self, x: usize, y: usize, c: char) {
         let cell = self
             .char_to_role
