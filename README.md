@@ -126,7 +126,7 @@ Are negative coordinates accepted by the game engine? The instructions are silen
 
 I did wonder if the audit requirement to change "the position of the players each time so that the student player can be the p1 and the p2" was meant to ensure that players have a roughly similar chance of getting stuck on the first move.
 
-Any yet, negative coordinates are admitted! Swapping the labels of the two players in the example above and having one's own bot move output 4 -1 for the first move allows it to place
+And yet, negative coordinates are admitted! Swapping the labels of the two players in the example above and having one's own bot move output 4 -1 for the first move allows it to place
 
 ```
 .....
