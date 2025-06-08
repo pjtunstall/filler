@@ -7,13 +7,12 @@ use crate::symbols::CellRole;
 pub struct Attack;
 
 impl Strategy for Attack {
-    fn choose_move(&self, anfield: &Anfield, piece: &Piece) -> Option<(i32, i32)> {
-        place(anfield, piece);
-        None
+    fn choose_move(&self, anfield: &Anfield, piece: &Piece) -> [i32; 2] {
+        place(anfield, piece)
     }
 }
 
-pub fn place(anfield: &Anfield, piece: &Piece) -> [usize; 2] {
+pub fn place(anfield: &Anfield, piece: &Piece) -> [i32; 2] {
     let possible_placements = get_possible_placements(anfield, &piece);
     let mut chosen_possible_placement = possible_placements[0];
     for possible_placement in possible_placements.iter().skip(1) {
@@ -22,8 +21,8 @@ pub fn place(anfield: &Anfield, piece: &Piece) -> [usize; 2] {
             chosen_possible_placement = *possible_placement;
         }
     }
-    let x = chosen_possible_placement.x;
-    let y = chosen_possible_placement.y;
+    let x = chosen_possible_placement.x as i32;
+    let y = chosen_possible_placement.y as i32;
     [x, y]
 }
 

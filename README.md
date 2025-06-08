@@ -69,6 +69,10 @@ Piece 5 4:
 
 Are negative coordinates accepted by the game engine though?
 
+### Exit strategy
+
+Should the bot exit after playing its final move?
+
 ## Plan
 
 Strategy: Place the piece as close to the opponent's territory as possible, hence move our territory towards the opponent's and surround them. A refinement could be, after the opponet is immobilized, to try to pack our pieces in as small a space as possible; alternatively with as few holes as possible.
