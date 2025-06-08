@@ -44,10 +44,10 @@ This project is my attempt at the [01Edu version](https://github.com/01-edu/publ
 | Player 1 latest move |    a    |     o     |
 | Player 2 latest move |    s    |     x     |
 | Empty                |    .    |     .     |
-| New piece            |    #    |     *     |
+| New piece            |    O    |     *     |
 ```
 
-Regarding the 01Edu new-piece symbol, the shape cells of the three example pieces in the [pieces](https://github.com/01-edu/public/tree/master/subjects/filler#the-pieces) section are all denoted by '#', but those of the example piece in the [Usage](https://github.com/01-edu/public/tree/master/subjects/filler#usage) section by 'O' (uppercase letter after 'N'). I'm guessing this is an accidental relic of an earlier version where Player 1's symbol was 'O', as in the 42 School instructions.
+Regarding the 01Edu new-piece symbol, the shape cells of the three example pieces in the [pieces](https://github.com/01-edu/public/tree/master/subjects/filler#the-pieces) section are all denoted by '#', but those of the example piece in the [Usage](https://github.com/01-edu/public/tree/master/subjects/filler#usage) section by 'O' (uppercase letter after 'N'). At first, I guessed that the 'O' in the Usage example might be an accidental relic of an earlier version where Player 1's symbol was 'O', as in the 42 School instructions. But, on running the game engine, I see that 01Edu's current Linux game engine currently uses 'O', not '#', for its new-piece symbol.
 
 ## Questions
 

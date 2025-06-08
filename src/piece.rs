@@ -16,19 +16,20 @@ impl Piece {
         lines: &mut impl Iterator<Item = Result<String, io::Error>>,
         width: usize,
         height: usize,
-    ) -> Self {
-        let mut raw_piece = Vec::new();
+    ) -> Result<Self, io::Error> {
+        let mut raw_piece = Vec::with_capacity(height);
         for _ in 0..height {
-            raw_piece.push(parse::read_line(lines, "piece data"));
+            raw_piece.push(parse::read_line(lines, "piece data")?);
         }
         let shape = parse(raw_piece);
-        Piece {
+        Ok(Piece {
             width,
             height,
             shape,
-        }
+        })
     }
 }
+
 
 #[derive(Default, Debug, Clone, Copy)]
 pub struct PossiblePlacement {
@@ -40,9 +41,9 @@ pub struct PossiblePlacement {
 fn parse(raw: Vec<String>) -> Vec<Cell> {
     let mut shape = Vec::new();
 
-    for (x, line) in raw.iter().enumerate() {
-        for (y, c) in line.chars().enumerate() {
-            if c == symbols::NEW_PIECE_CHAR {
+    for (y, line) in raw.iter().enumerate() {
+        for (x, c) in line.chars().enumerate() {
+            if c != symbols::EMPTY_CHAR {
                 shape.push(Cell { y, x });
             }
         }

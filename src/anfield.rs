@@ -134,20 +134,26 @@ impl Anfield {
         self.set_cell(x, y, *cell);
     }
 
-    pub fn parse(&mut self, lines: &mut impl Iterator<Item = Result<String, io::Error>>) {
-        let _ = parse::read_line(lines, "column numbers"); // Ignore line with column numbers.
-        let mut field = Vec::with_capacity(self.height);
-        for _ in 0..self.height {
-            field.push(parse::read_line(lines, "field")[4..].to_string()); // Ignore row numbers and space.
-        }
-        let mut y = 0;
-        for line in field {
-            let mut x = 0;
-            for c in line.chars() {
-                self.parse_cell(x, y, c);
-                x += 1;
-            }
-            y += 1;
+    pub fn parse(
+    &mut self,
+    lines: &mut impl Iterator<Item = Result<String, io::Error>>,
+) -> Result<(), io::Error> {
+    let _ = parse::read_line(lines, "column numbers")?; // Skip column numbers
+
+    let mut field = Vec::with_capacity(self.height);
+    for _ in 0..self.height {
+        let line = parse::read_line(lines, "field")?;
+        field.push(line[4..].to_string()); // Skip row number
+    }
+
+    for (y, line) in field.iter().enumerate() {
+        for (x, c) in line.chars().enumerate() {
+            self.parse_cell(x, y, c);
         }
     }
+
+    Ok(())
+}
+
+
 }

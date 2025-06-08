@@ -48,24 +48,25 @@ fn try_fit(anfield: &Anfield, piece: &Piece, x: usize, y: usize) -> Option<Possi
     for cell in &piece.shape {
         let s = x + cell.x;
         let t = y + cell.y;
-        // Dedending on the rules, we may need to replaces these `usize` with signed integers, in which case we'll need a check that they're nonnegative too.
+
         if s >= anfield.width || t >= anfield.height {
             return None;
         }
+
         let cell_role = anfield.get_cell_role(s, t);
         match cell_role {
-            Some(cell_role) => match cell_role {
-                CellRole::OpponentSymbol | CellRole::OpponentLatestMove => return None,
-                CellRole::OwnSymbol | CellRole::OwnLatestMove => overlaps_with_own_territory += 1,
-                _ => continue,
-            },
+            Some(CellRole::OpponentSymbol | CellRole::OpponentLatestMove) => return None,
+            Some(CellRole::OwnSymbol | CellRole::OwnLatestMove) => overlaps_with_own_territory += 1,
+            Some(_) => (),
             None => panic!("Cell ({}, {}) has no role", s, t),
         }
-        if overlaps_with_own_territory == 2 {
-            return None;
-        }
-        overlaps_with_own_territory = 0;
     }
+
+
+    if overlaps_with_own_territory != 1 {
+        return None;
+    }
+
     Some(PossiblePlacement {
         x,
         y,
