@@ -1,3 +1,5 @@
+use std::collections::VecDeque;
+
 use crate::anfield::Anfield;
 use crate::cell::Cell;
 use crate::piece::{Piece, PossiblePlacement};
@@ -16,7 +18,7 @@ pub fn place(anfield: &Anfield, piece: &Piece) -> [i32; 2] {
     let possible_placements = get_possible_placements(anfield, &piece);
     let mut chosen_possible_placement = possible_placements[0];
     for possible_placement in possible_placements.iter().skip(1) {
-        if possible_placement.distance_to_opponent > chosen_possible_placement.distance_to_opponent
+        if possible_placement.distance_to_opponent < chosen_possible_placement.distance_to_opponent
         {
             chosen_possible_placement = *possible_placement;
         }
@@ -62,7 +64,6 @@ fn try_fit(anfield: &Anfield, piece: &Piece, x: usize, y: usize) -> Option<Possi
         }
     }
 
-
     if overlaps_with_own_territory != 1 {
         return None;
     }
@@ -75,45 +76,43 @@ fn try_fit(anfield: &Anfield, piece: &Piece, x: usize, y: usize) -> Option<Possi
 }
 
 fn get_distance_to_opponent(anfield: &Anfield, x: usize, y: usize) -> usize {
-    let mut distance = 0;
-    let mut q = Vec::new();
     let mut visited = vec![false; anfield.cells.len()];
+    let mut queue = VecDeque::new();
     visited[y * anfield.width + x] = true;
-    q.push(Cell { x, y });
+    queue.push_back((Cell { x, y }, 0));
 
-    while !q.is_empty() {
-        let p = q.pop().unwrap();
+    while let Some((p, distance)) = queue.pop_front() {
         match anfield.get_cell_role(p.x, p.y) {
-            Some(CellRole::OpponentSymbol) | Some(CellRole::OpponentLatestMove) => break,
+            Some(CellRole::OpponentSymbol) | Some(CellRole::OpponentLatestMove) => {
+                return distance;
+            }
             _ => (),
         }
-        distance += 1;
 
-        if p.x > 0 {
-            try_visit(anfield, &mut q, &mut visited, p.x - 1, p.y);
-        }
-        if p.x < anfield.width - 1 {
-            try_visit(anfield, &mut q, &mut visited, p.x + 1, p.y);
-        }
-        if p.y > 0 {
-            try_visit(anfield, &mut q, &mut visited, p.x, p.y - 1);
-        }
-        if p.y < anfield.height - 1 {
-            try_visit(anfield, &mut q, &mut visited, p.x, p.y + 1);
+        for (nx, ny) in neighbors(p.x, p.y, anfield.width, anfield.height) {
+            if !visited[ny * anfield.width + nx] {
+                visited[ny * anfield.width + nx] = true;
+                queue.push_back((Cell { x: nx, y: ny }, distance + 1));
+            }
         }
     }
 
-    distance
+    usize::MAX
 }
 
-fn try_visit(anfield: &Anfield, q: &mut Vec<Cell>, visited: &mut Vec<bool>, s: usize, t: usize) {
-    if visited[t * anfield.width + s] {
-        return;
+fn neighbors(x: usize, y: usize, width: usize, height: usize) -> Vec<(usize, usize)> {
+    let mut result = Vec::new();
+    if x > 0 {
+        result.push((x - 1, y));
     }
-    match anfield.get_cell_role(s, t) {
-        Some(CellRole::OwnSymbol) | Some(CellRole::OwnLatestMove) => return,
-        _ => (),
+    if x + 1 < width {
+        result.push((x + 1, y));
     }
-    visited[t * anfield.width + s] = true;
-    q.push(Cell { x: s, y: t });
+    if y > 0 {
+        result.push((x, y - 1));
+    }
+    if y + 1 < height {
+        result.push((x, y + 1));
+    }
+    result
 }
