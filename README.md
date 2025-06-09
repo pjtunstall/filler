@@ -166,7 +166,7 @@ Can empty cells of pieces exceed the bottom or right edges of the Anfield, just 
 ## Todo
 
 - Add image to README.
-- Allow negative cordinates, being careful to avooid out-of-bounds errors.
+- Allow negative cordinates, being careful to avoid out-of-bounds errors.
 - Allow pieces to be placed in such a way that at least their empty cells go off the right or bottom edge if that's allowed.
   - Likewise nonempty cells if that's possible; check it.
 - Write tests.
