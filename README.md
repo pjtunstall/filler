@@ -186,7 +186,6 @@ Can empty cells of pieces exceed the bottom or right edges of the Anfield, just 
 
 ## Todo
 
-- Add image to README.
 - Write tests.
 - Beat Terminator.
   - Take advantage of the possibility to send negative cordinates, being careful to avoid out-of-bounds errors?
