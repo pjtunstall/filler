@@ -1,21 +1,9 @@
-use std::io::{self, BufRead};
 use filler::anfield::Anfield;
 use filler::game::Game;
 use filler::parse;
 use filler::piece::Piece;
 use filler::strategy::attack::Attack;
-
-// use std::fs::OpenOptions;
-// use std::io::Write;
-
-// fn log(msg: &str) {
-//     let mut file = OpenOptions::new()
-//         .create(true)
-//         .append(true)
-//         .open("/tmp/filler_log.txt")
-//         .unwrap();
-//     writeln!(file, "{}", msg).unwrap();
-// }
+use std::io::{self, BufRead};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let stdin = io::stdin();
@@ -40,7 +28,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let next_line = parse::read_line(&mut lines, "piece header")?;
         let [width, height] = parse::get_width_and_height(next_line);
         let piece = Piece::new(&mut lines, width, height)?;
-        // log(&format!("Playing move for piece {}x{}", piece.width, piece.height));
         game.play(&piece);
 
         let _anfield_header = parse::read_line(&mut lines, "anfield header")?;

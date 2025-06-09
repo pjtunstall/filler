@@ -56,7 +56,7 @@ This project is my attempt at the [01Edu version](https://github.com/01-edu/publ
 | New piece            |    O    |     *     |
 ```
 
-Regarding the 01Edu new-piece symbol, the shape cells of the three example pieces in the [pieces](https://github.com/01-edu/public/tree/master/subjects/filler#the-pieces) section are all denoted by '#', but those of the example piece in the [Usage](https://github.com/01-edu/public/tree/master/subjects/filler#usage) section by 'O' (uppercase letter after 'N'). At first, I guessed that the 'O' in the Usage example might be an accidental relic of an earlier version where Player 1's symbol was 'O', as in the 42 School instructions. But, on running the game engine, I see that 01Edu's current Linux game engine currently uses 'O', not '#', for its new-piece symbol.
+Regarding the 01Edu new-piece symbol, the shape cells of the three example pieces in the [pieces](https://github.com/01-edu/public/tree/master/subjects/filler#the-pieces) section are all denoted by '#', but those of the example piece in the [Usage](https://github.com/01-edu/public/tree/master/subjects/filler#usage) section by 'O' (uppercase letter after 'N'). At first, I guessed that the 'O' in the Usage example might be an accidental relic of an earlier version where Player 1's symbol was 'O', as in the 42 School instructions. But, on running the game engine, I see that 01Edu's Linux game engine, at least, currently uses 'O', not '#', for its new-piece symbol.
 
 ## Usage
 
@@ -189,5 +189,5 @@ Can empty cells of pieces exceed the bottom or right edges of the Anfield, just 
 - Write tests.
 - Beat Terminator.
   - Take advantage of the possibility to send negative cordinates, being careful to avoid out-of-bounds errors?
-  -Try placing pieces in such a way that at least their empty cells go off the right or bottom edge if that's allowed?
+  - Try placing pieces in such a way that at least their empty cells go off the right or bottom edge if that's allowed?
     - Likewise nonempty cells if that's possible. Check it.

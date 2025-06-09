@@ -1,35 +1,16 @@
 use std::io;
 
-// use std::io::{self, Write};
-// use std::fs::OpenOptions;
-
-// fn log(msg: &str) {
-//     if let Ok(mut file) = OpenOptions::new()
-//         .create(true)
-//         .append(true)
-//         .open("/tmp/filler_log.txt")
-//     {
-//         let _ = writeln!(file, "{}", msg);
-//     }
-// }
-
 pub fn read_line<I>(lines: &mut I, what: &str) -> Result<String, io::Error>
 where
     I: Iterator<Item = Result<String, io::Error>>,
 {
     match lines.next() {
-        Some(Ok(line)) => {
-            // log(&format!("Read line ({}): {}", what, line));
-            Ok(line)
-        }
-        Some(Err(e)) => {
-            // log(&format!("Error reading line ({}): {}", what, e));
-            Err(e)
-        }
-        None => {
-            // log(&format!("EOF reached unexpectedly while reading {}", what));
-            Err(io::Error::new(io::ErrorKind::UnexpectedEof, format!("Missing {}", what)))
-        }
+        Some(Ok(line)) => Ok(line),
+        Some(Err(e)) => Err(e),
+        None => Err(io::Error::new(
+            io::ErrorKind::UnexpectedEof,
+            format!("Missing {}", what),
+        )),
     }
 }
 
