@@ -181,8 +181,3 @@ on its initial cell, 4 3.
 ### Can pieces extend off the bottom or right of the grid?
 
 Can empty cells of pieces exceed the bottom or right edges of the Anfield? Yet to be determined, but I'm guessing empty cells can go anywhere as long as we follow the rule: "The shape of robots territory must not exceed the area of the Anfield."
-
-## Todo
-
-- Write tests.
-- Beat Terminator.
