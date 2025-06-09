@@ -39,7 +39,7 @@ To place a piece, a bot writes its coordinates (i.e., we must infer, the coordin
 
 To be valid, a move must not extend the player's territory outside the edges of the Anfield.
 
-Eventually one of the players will run out of space and should then make an illegal move: "If your robot can't place anymore peaces\[sic\] he should still return a result (even if invalid), our robots for example return `0 0\\n`, when they can't place any more pieces." The instructions don't say whether this forced invalid move has to be correctly formatted, although this might be implicit in the audit question "Can you confirm that the project runs correctly?" If one player crashes or fails to send anything till the game engine imposes an unspecified timeout, they lose and the game ends there.
+Eventually one of the players will run out of space and should then make an illegal move: "If your robot can't place anymore peaces\[sic\] he should still return a result (even if invalid), our robots for example return `0 0\\n`, when they can't place any more pieces." The instructions don't say whether this forced invalid move has to be correctly formatted, although this might be implicit in the audit question "Can you confirm that the project runs correctly?" If one player crashes or fails to send anything till the game engine imposes a timeout (by default 10s, but configurable), they lose and the game ends there.
 
 The challenge is to defeat three of the given robots on at least four out of five games. Bonus marks are to be had for defeating the most formidable opponent, terminator.
 
