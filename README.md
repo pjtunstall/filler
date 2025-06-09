@@ -2,6 +2,13 @@
 
 - [Context](#context)
 - [Versions](#versions)
+- [Usage](#usage)
+- [FAQ](#faq)
+  - [Can pieces be rotated?](#can-pieces-be-rotated)
+  - [Should your bot exit after playing its final move?](#should-your-bot-exit-after-playing-its-final-move)
+  - [Can you send negative coordinates?](#can-you-send-negative-coordinates)
+  - [Can pieces extend off the bottom or right of the grid?](#can-pieces-extend-off-the-bottom-or-right-of-the-grid)
+- [Todo](#todo)
 
 ## Context
 
@@ -129,17 +136,17 @@ Examples:
 
 You can exit the game at any time with Ctrl+C, or press escape to exit the visualizer.
 
-## Questions
+## FAQ
 
 ### Can pieces be rotated?
 
 Apparently not. There's no way to express it to the game engine.
 
-### Exit strategy
+### Should your bot exit after playing its final move?
 
-Should your bot exit after playing its final move? No. Indeed, it's perfectly possible to get stuck while your opponent continues to play and yet you win on points because your opponent didn't have enough space.
+No. Indeed, it's perfectly possible to get stuck while your opponent continues to play and yet you win on points because your opponent didn't have enough space.
 
-### Negative coordinates
+### Can you send negative coordinates?
 
 Sometimes it might be necessary for a player to send negative numbers as the coordinates of the piece (i.e. its top-left cell). Not all legitimate moves can be expressed otherwise, given the possibility of pieces such as
 
@@ -173,7 +180,7 @@ OO...
 
 on its initial cell, 4 3.
 
-### Botton-right rules
+### Can pieces extend off the bottom or right of the grid?
 
 Can empty cells of pieces exceed the bottom or right edges of the Anfield, just as they can be negative? Can nonempty cells do so?
 
@@ -182,6 +189,6 @@ Can empty cells of pieces exceed the bottom or right edges of the Anfield, just 
 - Add image to README.
 - Write tests.
 - Beat Terminator.
-  - Allow negative cordinates, being careful to avoid out-of-bounds errors?
-  - Allow pieces to be placed in such a way that at least their empty cells go off the right or bottom edge if that's allowed?
+  - Take advantage of the possibility to send negative cordinates, being careful to avoid out-of-bounds errors?
+  -Try placing pieces in such a way that at least their empty cells go off the right or bottom edge if that's allowed?
     - Likewise nonempty cells if that's possible; check it.
