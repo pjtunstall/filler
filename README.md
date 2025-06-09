@@ -190,4 +190,4 @@ Can empty cells of pieces exceed the bottom or right edges of the Anfield, just 
 - Beat Terminator.
   - Take advantage of the possibility to send negative cordinates, being careful to avoid out-of-bounds errors?
   -Try placing pieces in such a way that at least their empty cells go off the right or bottom edge if that's allowed?
-    - Likewise nonempty cells if that's possible; check it.
+    - Likewise nonempty cells if that's possible. Check it.
