@@ -37,13 +37,21 @@ Piece 6 3:
 
 To place a piece, a bot writes its coordinates (i.e., we must infer, the coordinates of its top left corner) to stdout, separated by a space and followed by a newline.
 
-Eventually one of the players will run out of space and should then make an illegal move: "If your robot can't place anymore peaces\[sic\] he should still return a result (even if invalid), our robots for example return `0 0\\n`, when they can't place any more pieces." The instructions don't sepcify whether this forced invalid move has to be correctly formatted at least, or within the bounds of the board, although perhaps this is implicit in the audit question "Can you confirm that the project runs correctly?" If one player crashes or fails to send anything till the game engine imposes an unspecified timeout, they lose and the game ends there.
+To be valid, a move must not extend the player's territory outside the edges of the Anfield.
+
+Eventually one of the players will run out of space and should then make an illegal move: "If your robot can't place anymore peaces\[sic\] he should still return a result (even if invalid), our robots for example return `0 0\\n`, when they can't place any more pieces." The instructions don't say whether this forced invalid move has to be correctly formatted, although this might be implicit in the audit question "Can you confirm that the project runs correctly?" If one player crashes or fails to send anything till the game engine imposes an unspecified timeout, they lose and the game ends there.
 
 The challenge is to defeat three of the given robots on at least four out of five games. Bonus marks are to be had for defeating the most formidable opponent, terminator.
 
 ## Versions
 
-This project is my attempt at the [01Edu version](https://github.com/01-edu/public/tree/master/subjects/filler) // [01Founders version](https://learn.01founders.co/intra/london/div-01/filler) of the exercise, which is the same as the [42 School version](https://github.com/VBrazhnik/Filler/blob/master/filler.en.pdf), apart from trivial differences: 42 School calls the board "plateau", while 01Edu calls it "Anfield", and different symbols are used for the territories of the two players and their latest moves. (I found the 42 School instructions worth reading too, though, as they're more detailed than those of 01Edu--see especially the longer example of gameplay in §V.4.3, p. 11--and randomly contain a list of the Seven Deadly Sins, complete with Biblical quotations to keep you on the right track!)
+This project is my attempt at the [01Edu version](https://github.com/01-edu/public/tree/master/subjects/filler) // [01Founders version](https://learn.01founders.co/intra/london/div-01/filler) of the exercise, which is similar to the [42 School version](https://github.com/VBrazhnik/Filler/blob/master/filler.en.pdf).
+
+One significant difference is that their version of the game is said to stop as soon as one player can't make a legal move, whereas ours continues alowing the other player to place pieces (and hence collect points) as long as they can after that.
+
+There are some trivial differences too: 42 School calls the board "plateau", while 01Edu calls it "Anfield", and different symbols are used for the territories of the two players and their latest moves.
+
+I'd say the 42 School instructions still worth reading even if your objective is only to understand the 01Edu version. They're more detailed than those of 01Edu--see especially the longer example of gameplay in §V.4.3, p. 11.
 
 ```
 | Meaning              |  01Edu  | 42 School |
@@ -148,17 +156,7 @@ No. Indeed, it's perfectly possible to get stuck while your opponent continues t
 
 ### Can you send negative coordinates?
 
-Sometimes it might be necessary for a player to send negative numbers as the coordinates of the piece (i.e. its top-left cell). Not all legitimate moves can be expressed otherwise, given the possibility of pieces such as
-
-```
-Piece 5 4:
-.##..
-.##..
-..#..
-...#.
-```
-
-Are negative coordinates accepted by the game engine? The instructions are silent on this point. It seems that the given bot terminator chooses invalid coordinates rather than negative ones, as can be seen by trying this random seed.
+Yes. Sometimes it might be necessary for a player to send negative numbers as the coordinates of the piece (i.e. its top-left cell). Not all legitimate moves can be expressed otherwise. At first, I wasn't sure whether negative coordinates were accepted by the game engine. The instructions are silent on this point. It seems that the given bot terminator chooses invalid coordinates rather than negative ones, as can be seen by launching the game with this random seed:
 
 ```
 ./linux_game_engine -f maps/map01 -p2 solution/filler -p1 linux_robots/terminator -s 1749393971253574634
@@ -182,12 +180,9 @@ on its initial cell, 4 3.
 
 ### Can pieces extend off the bottom or right of the grid?
 
-Can empty cells of pieces exceed the bottom or right edges of the Anfield, just as they can be negative? Can nonempty cells do so?
+Can empty cells of pieces exceed the bottom or right edges of the Anfield? Yet to be determined, but I'm guessing empty cells can go anywhere as long as we follow the rule: "The shape of robots territory must not exceed the area of the Anfield."
 
 ## Todo
 
 - Write tests.
 - Beat Terminator.
-  - Take advantage of the possibility to send negative cordinates, being careful to avoid out-of-bounds errors?
-  - Try placing pieces in such a way that at least their empty cells go off the right or bottom edge if that's allowed?
-    - Likewise nonempty cells if that's possible. Check it.
