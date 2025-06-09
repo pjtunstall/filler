@@ -55,45 +55,65 @@ Regarding the 01Edu new-piece symbol, the shape cells of the three example piece
 
 Open a terminal, clone this repository, and navigate into the root of the project:
 
-```bash
+```sh
 git clone https://github.com/pjtunstall/filler
 cd filler
 ```
 
-Compile the executable file statically, e.g. for the target platform `x86_64-unknown-linux-musl`:
+Download the docker_image folder as a zip file [here](https://assets.01-edu.org/filler/filler.zip) from the 01Edu public repo. To suppress the warning `JSONArgsRecommended: JSON arguments recommended for ENTRYPOINT to prevent unintended behavior related to OS signals (line 11)` that would otherwise appear when you build the container, change the final line of the Dockerfile from
 
-```bash
-rustup target add x86_64-unknown-linux-musl
-cargo build --release --target x86_64-unknown-linux-musl
+```Dockerfile
+ENTRYPOINT /bin/bash
 ```
 
-(Adjust according to your platform.) The reason for static compilation is that the docker container provided has an old version of libc, which caused the dynamic linker to fail to load my binary otherwise. Then move the binary as follows:
+to
 
-```bash
-mv target/x86_64-unknown-linux-musl/release/filler ../filler./docker_image/solution/
+```Dockerfile
+CMD ["/bin/bash"]
 ```
 
-assuming the zip provided has been unzipped as `filler.` in the same folder as the Rust project.
+Compile the binaries for my bot and visualizer:
 
-Navigate into the docker_image folder, then build and run the docker container:
+```sh
+cargo build --release
+```
 
-```bash
+Move or copy them to `docker_file`, noting that the unzipped folder would have been called `filler` but needs some distinguishing mark to make it different from the project folder. On Linux, at least, a final `.` was supplied automatically.
+
+```sh
+cp mv target/release/filler ../filler./docker_image/solution/
+cp target/release/visualizer ../filler./docker_image/
+```
+
+Optionally, copy the launch script there too:
+
+```sh
+cp launch.sh filler./docker_image/
+```
+
+This will let you run the container with `./launch.sh`, as a convenience, instead of having to type the elaborate run command in the code block that follows.
+
+Navigate into the `docker_image` folder, then build and run the docker container:
+
+```sh
 cd filler./docker_image
 docker build -t filler .
-docker run -v "$(pwd)/solution":/filler/solution -it filler
+docker run -v "$(pwd)/solution":/filler./solution -it filler
 ```
 
-Move the visualizer executable as follows:
+You should now be in a shell session inside the container. To run a game, choose a map and two opponents, e.g. to pit my bot against their terminator:
 
-```bash
-mv ../visualizer/target/x86_64-unknown-linux-musl/release/visualizer ../filler./docker_image
+```sh
+./linux_game_engine -f maps/map01 -p1 solution/filler -p2 linux_robots/terminator
 ```
 
-To run a game with the visualizer:
+To run with the visualizer, exit docker and, on a host machine terminal, enter:
 
-```bash
-docker run -v "$(pwd)/solution":/filler/solution -it filler | ./visualizer
+```sh
+./linux_game_engine -f maps/map01 -p1 solution/filler -p2 linux_robots/terminator | ./visualizer
 ```
+
+You can add a scale argument after visualizer, thus: `./visualizer 10`. The default, if you don't specify a scale, is 20.
 
 ## Questions
 
@@ -145,11 +165,8 @@ Can empty cells of pieces exceed the bottom or right edges of the Anfield, just 
 
 ## Todo
 
-- Test visualizer on real examples.
-  - Use it to study the terminator.
-  - Maybe let the scale be adjusted with a flag.
 - Allow negative cordinates, being careful to avooid out-of-bounds errors.
-- Allow pieces to be placed in such a way that at least their empty cells go off the right or bottom edge.
+- Allow pieces to be placed in such a way that at least their empty cells go off the right or bottom edge if that's allowed.
   - Likewise nonempty cells if that's possible; check it.
 - Write tests.
 - Beat Terminator.
