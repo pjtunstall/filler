@@ -27,11 +27,19 @@ fn main() {
             } else if width > 0 && height > 0 {
                 if line.len() > 4 {
                     let row_str = &line[4..];
-                    if row_str.len() >= width {
-                        grid.push(row_str.chars().take(width).collect());
-                        if grid.len() == height {
-                            let _ = tx.send((width, height, grid.clone()));
-                            grid.clear();
+                    // Only process lines that start with a 3-digit row number followed by space.
+                    if line.len() >= 4
+                        && line.chars().nth(0).map_or(false, |c| c.is_ascii_digit())
+                        && line.chars().nth(1).map_or(false, |c| c.is_ascii_digit())
+                        && line.chars().nth(2).map_or(false, |c| c.is_ascii_digit())
+                        && line.chars().nth(3) == Some(' ')
+                    {
+                        if row_str.len() >= width {
+                            grid.push(row_str.chars().take(width).collect());
+                            if grid.len() == height {
+                                let _ = tx.send((width, height, grid.clone()));
+                                grid.clear();
+                            }
                         }
                     }
                 }
@@ -83,7 +91,6 @@ fn main() {
                 }
             }
         }
-
 
         window
             .update_with_buffer(&buffer, width * scale, height * scale)
