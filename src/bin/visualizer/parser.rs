@@ -38,7 +38,7 @@ impl GridParser {
             return None;
         }
 
-        // Only process lines that start with a 3-digit row number followed by space
+        // Only process lines that start with a 3-digit row number followed by space.
         if !self.is_grid_data_line(line) {
             return None;
         }
