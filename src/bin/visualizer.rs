@@ -12,30 +12,9 @@ mod visualizer {
 use visualizer::parser::GridParser;
 use visualizer::renderer::{create_buffer_and_window, render_grid_to_buffer};
 
-fn spawn_input_thread(tx: mpsc::Sender<(usize, usize, Vec<Vec<char>>)>) {
-    thread::spawn(move || {
-        let stdin = io::stdin();
-        let mut parser = GridParser::new();
-
-        for line in stdin.lock().lines().filter_map(Result::ok) {
-            println!("{}", line);
-            if let Some(grid_data) = parser.process_line(&line) {
-                let _ = tx.send(grid_data);
-            }
-        }
-    });
-}
-
-fn get_scale_from_args() -> usize {
-    std::env::args()
-        .nth(1)
-        .and_then(|s| s.parse::<usize>().ok())
-        .unwrap_or(20)
-}
-
 fn main() {
     let (tx, rx) = mpsc::channel();
-    let scale = get_scale_from_args();
+    let (scale, duration) = get_args();
 
     spawn_input_thread(tx);
 
@@ -61,6 +40,44 @@ fn main() {
         window
             .update_with_buffer(&buffer, width * scale, height * scale)
             .unwrap();
-        thread::sleep(Duration::from_millis(16));
+        thread::sleep(Duration::from_millis(duration));
     }
+}
+
+fn get_args() -> (usize, u64) {
+    let mut scale = 20;
+    let mut duration = 16;
+
+    let mut args = std::env::args().skip(1);
+    while let Some(arg) = args.next() {
+        match arg.as_str() {
+            "--scale" | "-s" => {
+                if let Some(val) = args.next().and_then(|s| s.parse().ok()) {
+                    scale = val;
+                }
+            }
+            "--duration" | "-d" => {
+                if let Some(val) = args.next().and_then(|s| s.parse().ok()) {
+                    duration = val;
+                }
+            }
+            _ => {}
+        }
+    }
+
+    (scale, duration)
+}
+
+fn spawn_input_thread(tx: mpsc::Sender<(usize, usize, Vec<Vec<char>>)>) {
+    thread::spawn(move || {
+        let stdin = io::stdin();
+        let mut parser = GridParser::new();
+
+        for line in stdin.lock().lines().filter_map(Result::ok) {
+            println!("{}", line);
+            if let Some(grid_data) = parser.process_line(&line) {
+                let _ = tx.send(grid_data);
+            }
+        }
+    });
 }

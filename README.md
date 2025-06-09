@@ -113,7 +113,21 @@ To run with the visualizer, exit docker and, on a host machine terminal, enter:
 ./linux_game_engine -f maps/map01 -p1 solution/filler -p2 linux_robots/terminator | ./visualizer
 ```
 
-You can add a scale argument after visualizer, thus: `./visualizer 10`. The default, if you don't specify a scale, is 20.
+Optionally, you can specify a scale (size) for the visualizer window and/or a duration to wait after parsing and drawing each move.
+
+```
+Usage: ... | ./visualizer [-s|--scale SCALE] [-d|--duration DURATION]
+Defaults:
+  SCALE      = 20
+  DURATION   = 16 (milliseconds)
+
+Examples:
+  program -s 30 -d 50
+  program --scale 25
+  program --duration 75
+```
+
+You can exit the game at any time with Ctrl+C, or press escape to exit the visualizer.
 
 ## Questions
 
@@ -123,7 +137,7 @@ Apparently not. There's no way to express it to the game engine.
 
 ### Exit strategy
 
-Should one's bot exit after playing its final move? No.
+Should your bot exit after playing its final move? No. Indeed, it's perfectly possible to get stuck while your opponent continues to play and yet you win on points because your opponent didn't have enough space.
 
 ### Negative coordinates
 
@@ -146,7 +160,7 @@ Are negative coordinates accepted by the game engine? The instructions are silen
 
 I did wonder if the audit requirement to change "the position of the players each time so that the student player can be the p1 and the p2" was meant to ensure that players have a roughly similar chance of getting stuck on the first move.
 
-And yet, negative coordinates are admitted! Swapping the labels of the two players in the example above and having one's own bot move output 4 -1 for the first move allows it to place
+And yet, negative coordinates are admitted! Swapping the labels of the two players in the example above and having your own bot move output 4 -1 for the first move allows it to place
 
 ```
 .....
@@ -166,8 +180,8 @@ Can empty cells of pieces exceed the bottom or right edges of the Anfield, just 
 ## Todo
 
 - Add image to README.
-- Allow negative cordinates, being careful to avoid out-of-bounds errors.
-- Allow pieces to be placed in such a way that at least their empty cells go off the right or bottom edge if that's allowed.
-  - Likewise nonempty cells if that's possible; check it.
 - Write tests.
 - Beat Terminator.
+  - Allow negative cordinates, being careful to avoid out-of-bounds errors?
+  - Allow pieces to be placed in such a way that at least their empty cells go off the right or bottom edge if that's allowed?
+    - Likewise nonempty cells if that's possible; check it.
