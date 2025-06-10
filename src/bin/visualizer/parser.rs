@@ -63,3 +63,51 @@ impl GridParser {
             && line.chars().nth(3) == Some(' ')
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parses_anfield_grid_correctly() {
+        let input_lines = [
+            "Anfield 20 15:",
+            "    01234567890123456789",
+            "000 ....................",
+            "001 ....................",
+            "002 .........@..........",
+            "003 ....................",
+            "004 ....................",
+            "005 ....................",
+            "006 ....................",
+            "007 ....................",
+            "008 ....................",
+            "009 ....................",
+            "010 ....................",
+            "011 ....................",
+            "012 .........$..........",
+            "013 ....................",
+            "014 ....................",
+        ];
+
+        let mut parser = GridParser::new();
+
+        let mut parsed_grid = None;
+        for line in input_lines.iter() {
+            if let Some((width, height, grid)) = parser.process_line(line) {
+                parsed_grid = Some((width, height, grid));
+                break;
+            }
+        }
+
+        let (width, height, grid) = parsed_grid.expect("Grid was not parsed");
+
+        assert_eq!(width, 20);
+        assert_eq!(height, 15);
+        assert_eq!(grid.len(), height);
+
+        assert_eq!(grid[2][9], '@');
+        assert_eq!(grid[12][9], '$');
+        assert_eq!(grid[0][0], '.');
+    }
+}

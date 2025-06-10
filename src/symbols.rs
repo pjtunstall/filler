@@ -5,7 +5,7 @@ pub const P2_CHAR: char = '$'; // 42 School: 'X'.
 pub const P1_LATEST_CHAR: char = 'a'; // 42 School: 'o'.
 pub const P2_LATEST_CHAR: char = 's'; // 42 School: 'x'.
 pub const EMPTY_CHAR: char = '.'; // 42 School: '.'.
-pub const NEW_PIECE_CHAR: char = '#'; // 42 School: '*'.
+pub const NEW_PIECE_CHAR: char = 'O'; // 42 School: '*'.
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug, Hash)]
 pub enum CellRole {

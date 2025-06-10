@@ -31,3 +31,26 @@ pub fn get_width_and_height(line: String) -> [usize; 2] {
     let second: usize = parts[2].trim_end_matches(':').parse().unwrap();
     [first, second]
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_get_width_and_height() {
+        let line = "Anfield 20 15:";
+        let dims = get_width_and_height(line.to_string());
+        assert_eq!(dims, [20, 15]);
+    }
+
+    #[test]
+    fn test_get_ids() {
+        let line1 = "$$$ exec p1 : [robots/bender]";
+        let ids1 = get_ids(line1.to_string());
+        assert_eq!(ids1, [1, 2]);
+
+        let line2 = "$$$ exec p2 : [robots/bender]";
+        let ids2 = get_ids(line2.to_string());
+        assert_eq!(ids2, [2, 1]);
+    }
+}
