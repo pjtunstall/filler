@@ -1,7 +1,9 @@
-use std::io::{self, BufRead};
-use std::sync::mpsc;
-use std::thread;
-use std::time::Duration;
+use std::{
+    io::{self, BufRead},
+    sync::mpsc,
+    thread,
+    time::Duration,
+};
 
 use minifb::{Key, Window, WindowOptions};
 
