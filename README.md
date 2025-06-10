@@ -1,5 +1,7 @@
 # filler
 
+![Screenshot from my vizualizer of bots competing at filler.](screenshot.png)
+
 - [Context](#context)
 - [Versions](#versions)
 - [Usage](#usage)
@@ -11,7 +13,7 @@
 - [Notes](#notes)
 
 ## Context
-
+Screenshot from my vizualizer of bots competing at filler
 This project is an implementation of the [01Edu version](https://github.com/01-edu/public/tree/master/subjects/filler) of an exercise called filler.
 
 The challenge is to create a bot (program) that can defeat another bot at a game played on a rectangular board. We're given several executable files: a so-called "game engine" and four opponents. When run, the game engine will launch the two bots specified by command-line arguments. It will send random shapes (like generalized Tetris shapes) to each bot in turn along with the current state of play. The bot must place this shape on the board in such a way that precisely one cell (character) of the new shape overlaps with one of the shapes it placed previously, thus increasing its territory. It mustn't overlap any cell of the opponents territory.
