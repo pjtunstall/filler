@@ -109,7 +109,7 @@ Optionally, copy the launch script there too:
 cp launch.sh filler./docker_image/
 ```
 
-This will let you run the container with `./launch.sh`, as a convenience, instead of having to type the elaborate run command in the code block that follows.
+This will let you run the container with `./launch.sh`, as a convenience, instead of having to type the elaborate run command, `docker run` etc., from the code block that follows.
 
 Navigate into the `docker_image` folder, then build and run the docker container:
 
