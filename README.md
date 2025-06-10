@@ -10,6 +10,8 @@
   - [Should your bot exit after playing its final move?](#should-your-bot-exit-after-playing-its-final-move)
   - [Can you send negative coordinates?](#can-you-send-negative-coordinates)
   - [Can pieces extend off the bottom or right of the grid?](#can-pieces-extend-off-the-bottom-or-right-of-the-grid)
+- [Strategy](#strategy)
+- [What next?](#what-next)
 - [Notes](#notes)
 
 ## Context
@@ -189,9 +191,30 @@ on its initial cell, 4 3.
 
 Can empty cells of pieces exceed the bottom or right edges of the board? Yet to be determined, but I'm guessing empty cells can go anywhere as long as we follow the rule: "The shape of robots territory must not exceed the area of the board."
 
+## Strategy
+
+My first thought was to go on the attack and move towards the opponent with the aim of surrounding them.
+
+Originally, for simpicity, I just picked the position whose top-left corner was closest to enemy territory, using the same method to calculate the ([taxicab](https://en.wikipedia.org/wiki/Taxicab_geometry)) distance. That beat the weaker bots but only very occasionally beat terminator.
+
+My current strategy is essentially that of Jani Mäkelä, although I haven't looked at his implementation yet.
+
+On each turn, my bot, [maximilian](https://en.wikipedia.org/wiki/The_Black_Hole_(1979_film)), considers all possible locations to place the piece. For the valid positions, it weights each of its shape cells, giving them a higher score the closer they are to the opponent's territory. (It uses breadth-first search to find the distance to the nearest enemy cell.) It adds together the scores for each cell and choses the position that maximizes this sum. The purpose of this is to place as many cells as close as possible to the opposing bot to constrain it.
+
+This beats the weaker bots[^5] and is equal to terminator.
+
+## What next?
+
+I've tried lowering the weight of the cells bordering enemy territory as Jani suggests. He makes a plausible argument as to why this would help, and says it did help him, but I haven't noticed any difference.
+
+I've also played with the idea of giving maximilian different behavior on the first few moves, but all the variations I've tried so far make it worse.
+
+It would be nice to implement negative coordinate placements.
+
 ## Notes
 
 [^1]: The 'O' in these three examples from the [The pieces](https://github.com/01-edu/public/tree/master/subjects/filler#the-pieces) section is actually a '#', but this must be a typo or a relic from an earlier version, so I've corrected it here. The example in the [Usage](https://github.com/01-edu/public/tree/master/subjects/filler#usage) section has 'O' (uppercase letter after 'N'), as does the current game engine.
 [^2]: The "coordinates" of a piece are nowhere definied explicitly, as far as I can see, but can be inferred from the fact that `7 2\n` is a legitimate way to place `.OO.` in the example of the [Usage](https://github.com/01-edu/public/tree/master/subjects/filler#usage) section, given that the player's territory so far consists of just one cell, `9 2`.
 [^3]: When one player gets stuck, the other doesn't necessarily win. The first player to get stuck might still have more more points at the end.
 [^4]: The latter possibility seems more in keeping with the variety of strategies that Jani considers an interesting quality of the game: "... you can approach it in so many different ways. Perhaps your algorithm attempts to seal off half of the map and survive until the bitter end, perhaps you try to box your opponent in so they can't place any more pieces or maybe you try to breach into your opponents area and take over the space they were saving for late game."
+[^5]: ... except for those rare occaasions when maximilian is player one and gets stuck on the first move due to me not having implemented negative coordinate placements yet. (This can happen to terminator too.) With a little bit of work, I could make it so that pieces could be placed with some of their empty cells off the top or left of the board. It would be nice, but not enough currently to tip the balance against terminator, I think.
