@@ -1,8 +1,6 @@
 use std::io;
 
-use crate::cell::Cell;
-use crate::parse;
-use crate::symbols;
+use crate::{cell::Cell, parse, symbols};
 
 #[derive(Debug)]
 pub struct Piece {
@@ -29,7 +27,6 @@ impl Piece {
         })
     }
 }
-
 
 #[derive(Default, Debug, Clone, Copy)]
 pub struct PossiblePlacement {

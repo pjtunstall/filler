@@ -1,10 +1,6 @@
 use std::io::{self, BufRead};
 
-use crate::anfield::Anfield;
-use crate::game::Game;
-use crate::parse;
-use crate::piece::Piece;
-use crate::strategy::Strategy;
+use crate::{anfield::Anfield, game::Game, parse, piece::Piece, strategy::Strategy};
 
 pub fn run(strategy: impl Strategy) -> Result<(), Box<dyn std::error::Error>> {
     let stdin = io::stdin();

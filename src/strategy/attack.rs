@@ -1,10 +1,12 @@
 use std::collections::VecDeque;
 
-use crate::anfield::Anfield;
-use crate::cell::Cell;
-use crate::piece::{Piece, PossiblePlacement};
-use crate::strategy::Strategy;
-use crate::symbols::CellRole;
+use crate::{
+    anfield::Anfield,
+    cell::Cell,
+    piece::{Piece, PossiblePlacement},
+    strategy::Strategy,
+    symbols::CellRole,
+};
 
 pub struct Attack;
 

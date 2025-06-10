@@ -1,9 +1,10 @@
-use std::fmt;
-use std::io;
+use std::{fmt, io };
 
-use crate::bimap::BiMap;
-use crate::parse;
-use crate::symbols::{self, CellRole, Chars};
+use crate::{
+    bimap::BiMap,
+    parse,
+    symbols::{self, CellRole, Chars}
+};
 
 #[derive(Debug)]
 pub struct Anfield {

@@ -1,8 +1,6 @@
 use std::io::{self, Write};
 
-use crate::anfield::Anfield;
-use crate::piece::Piece;
-use crate::strategy::Strategy;
+use crate::{anfield::Anfield, piece::Piece, strategy::Strategy};
 
 pub struct Game<S: Strategy> {
     pub anfield: Anfield,
