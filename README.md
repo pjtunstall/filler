@@ -99,7 +99,7 @@ cargo build --release
 Move or copy them to `docker_file`, noting that the unzipped folder would have been called `filler` but needs some distinguishing mark to make it different from the project folder. On Linux, at least, a final `.` was supplied automatically.
 
 ```sh
-cp mv target/release/maximilian ../filler./docker_image/solution/
+cp target/release/maximilian ../filler./docker_image/solution/
 cp target/release/visualizer ../filler./docker_image/
 ```
 
@@ -161,7 +161,7 @@ No. Indeed, it's perfectly possible to get stuck while your opponent continues t
 
 Yes. Sometimes it might be necessary for a player to send negative numbers as the coordinates of the piece (i.e. its top-left cell). Not all legitimate moves can be expressed otherwise. At first, I wasn't sure whether negative coordinates were accepted by the game engine. The instructions are silent on this point. It seems that the given bot terminator chooses invalid coordinates rather than negative ones, as can be seen by launching the game with this random seed:
 
-```bash
+```sh
 ./linux_game_engine -f maps/map01 -p2 solution/maximilian -p1 linux_robots/terminator -s 1749393971253574634
 
 ```
