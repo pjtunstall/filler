@@ -8,7 +8,7 @@
   - [Should your bot exit after playing its final move?](#should-your-bot-exit-after-playing-its-final-move)
   - [Can you send negative coordinates?](#can-you-send-negative-coordinates)
   - [Can pieces extend off the bottom or right of the grid?](#can-pieces-extend-off-the-bottom-or-right-of-the-grid)
-- [Todo](#todo)
+- [Notes](#notes)
 
 ## Context
 
@@ -39,19 +39,21 @@ To place a piece, a bot writes its coordinates (i.e., we must infer, the coordin
 
 To be valid, a move must not extend the player's territory outside the edges of the Anfield.
 
-Eventually one of the players will run out of space and should then make an illegal move: "If your robot can't place anymore peaces\[sic\] he should still return a result (even if invalid), our robots for example return `0 0\\n`, when they can't place any more pieces." The instructions don't say whether this forced invalid move has to be correctly formatted, although this might be implicit in the audit question "Can you confirm that the project runs correctly?" If one player crashes or fails to send anything till the game engine imposes a timeout (by default 10s, but configurable), they lose and the game ends there.
+Eventually one of the players will run out of space and should then make an illegal move: "If your robot can't place anymore peaces\[sic\] he should still return a result (even if invalid), our robots for example return `0 0\n`, when they can't place any more pieces." The instructions don't say whether this forced invalid move has to be correctly formatted, although this might be implicit in the audit question "Can you confirm that the project runs correctly?" If one player crashes or fails to send anything till the game engine imposes a timeout (by default 10s, but configurable), they lose and the game ends there.
 
 The challenge is to defeat three of the given robots on at least four out of five games. Bonus marks are to be had for defeating the most formidable opponent, terminator.
 
 ## Versions
 
-This project is my attempt at the [01Edu version](https://github.com/01-edu/public/tree/master/subjects/filler) // [01Founders version](https://learn.01founders.co/intra/london/div-01/filler) of the exercise, which is similar to the [42 School version](https://github.com/VBrazhnik/Filler/blob/master/filler.en.pdf).
+This project is my attempt at the [01Edu version](https://github.com/01-edu/public/tree/master/subjects/filler) / [01Founders version](https://learn.01founders.co/intra/london/div-01/filler) of the exercise, which is similar to the 42 School Instructions [English](https://github.com/VBrazhnik/Filler/blob/master/filler.en.pdf) / [French](https://github.com/ivankozlovcodes/filler/blob/master/resources/filler.pdf).
 
-One significant difference is that their version of the game is said to stop as soon as one player can't make a legal move, whereas ours continues alowing the other player to place pieces (and hence collect points) as long as they can after that.
+One potential difference is that their version of the game is said to stop as soon as one player can't make a legal move, whereas ours continues alowing the other player to place pieces (and hence collect points) as long as they can after that.
 
-There are some trivial differences too: 42 School calls the board "plateau", while 01Edu calls it "Anfield", and different symbols are used for the territories of the two players and their latest moves.
+I say "potential" because there are some contradictions over this rule. The 42 School instructions say, "The game stops at the first error: either when a game piece cannot be placed anymore or it has been wrongly placed." ("La partie s'arrête à la première erreur: dès qu'une pièce ne peut plus posée ou a été mal posée.") On the other hand, Jani Mäkelä (GitHub name dal-yth) at Hive-Helsinki in 2020 remarks, "This repository has both the new (vm2) and old (vm) game masters [i.e. game engines], it is recommended to use the old one (filler_vm.rb) since the new one does not work well with the champions provided. Some of the champions refuse to place any pieces with the new executable and it also stops the game before the winning[^1] player can attempt to fill out the remaining field."[^2]
 
-I'd say the 42 School instructions still worth reading even if your objective is only to understand the 01Edu version. They're more detailed than those of 01Edu--see especially the longer example of gameplay in §V.4.3, p. 11.
+There are also some trivial differences: 42 School calls the board "plateau" (in English and French), while 01Edu calls it "Anfield", and different symbols are used for the territories of the two players and their latest moves.
+
+I'd say the 42 School instructions still worth reading even if your objective is only to understand the 01Edu version. They're more detailed than those of 01Edu--see especially the longer example of gameplay in §V.4.3.
 
 ```
 | Meaning              |  01Edu  | 42 School |
@@ -181,3 +183,8 @@ on its initial cell, 4 3.
 ### Can pieces extend off the bottom or right of the grid?
 
 Can empty cells of pieces exceed the bottom or right edges of the Anfield? Yet to be determined, but I'm guessing empty cells can go anywhere as long as we follow the rule: "The shape of robots territory must not exceed the area of the Anfield."
+
+## Notes
+
+[^1]: When one player gets stuck, the other doesn't necessarily win. The first player to get stuck might still have more more points at the end.
+[^2]: The latter possibility seems more in keeping with the variety of strategies that he considers an interesting quality of the game: "... you can approach it in so many different ways. Perhaps your algorithm attempts to seal off half of the map and survive until the bitter end, perhaps you try to box your opponent in so they can't place any more pieces or maybe you try to breach into your opponents area and take over the space they were saving for late game."
