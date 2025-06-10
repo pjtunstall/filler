@@ -18,7 +18,7 @@ pub fn place(anfield: &Anfield, piece: &Piece) -> [i32; 2] {
     let possible_placements = get_possible_placements(anfield, &piece);
     let mut chosen_possible_placement = possible_placements[0];
     for possible_placement in possible_placements.iter().skip(1) {
-        if possible_placement.distance_to_opponent < chosen_possible_placement.distance_to_opponent
+        if possible_placement.weight > chosen_possible_placement.weight
         {
             chosen_possible_placement = *possible_placement;
         }
@@ -30,11 +30,16 @@ pub fn place(anfield: &Anfield, piece: &Piece) -> [i32; 2] {
 
 fn get_possible_placements(anfield: &Anfield, piece: &Piece) -> Vec<PossiblePlacement> {
     let mut possible_placements = Vec::new();
-    for x in 0..(anfield.width - piece.width) {
-        for y in 0..(anfield.height - piece.height) {
+    for x in 0..(anfield.width) {
+        for y in 0..(anfield.height) {
             if let Some(mut possible_placement) = try_fit(anfield, &piece, x, y) {
-                possible_placement.distance_to_opponent =
-                    get_distance_to_opponent(anfield, possible_placement.x, possible_placement.y);
+                for cell in &piece.shape {
+                    let absolute_x = x + cell.x;
+                    let absolute_y = y + cell.y;
+                    let cell_distance = get_distance_to_opponent(anfield, absolute_x, absolute_y);
+                    let cell_weight = usize::MAX - cell_distance;
+                    possible_placement.weight += cell_weight;
+                }                
                 possible_placements.push(possible_placement);
             }
         }
@@ -71,7 +76,7 @@ fn try_fit(anfield: &Anfield, piece: &Piece, x: usize, y: usize) -> Option<Possi
     Some(PossiblePlacement {
         x,
         y,
-        distance_to_opponent: 0,
+        weight: 0,
     })
 }
 

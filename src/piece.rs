@@ -35,7 +35,7 @@ impl Piece {
 pub struct PossiblePlacement {
     pub x: usize,
     pub y: usize,
-    pub distance_to_opponent: usize,
+    pub weight: usize,
 }
 
 fn parse(raw: Vec<String>) -> Vec<Cell> {
