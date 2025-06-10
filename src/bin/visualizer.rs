@@ -1,8 +1,9 @@
-use minifb::{Key, Window, WindowOptions};
 use std::io::{self, BufRead};
 use std::sync::mpsc;
 use std::thread;
 use std::time::Duration;
+
+use minifb::{Key, Window, WindowOptions};
 
 mod visualizer {
     pub mod parser;
