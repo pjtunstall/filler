@@ -125,7 +125,7 @@ You should now be in a shell session inside the container. To run a game, choose
 ./linux_game_engine -f maps/map01 -p1 solution/maximilian -p2 linux_robots/terminator
 ```
 
-To run with the visualizer, exit docker and, on a host machine terminal, enter:
+To run with the visualizer, exit docker (e.g. with Ctrl+D) and, on your host machine terminal, enter:
 
 ```sh
 ./linux_game_engine -f maps/map01 -p1 solution/maximilian -p2 linux_robots/terminator | ./visualizer
