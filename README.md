@@ -12,32 +12,34 @@
 
 ## Context
 
-This project is an implementation of the [01Edu version](https://github.com/01-edu/public/tree/master/subjects/filler) of an exercise called filler. The challenge is to create a bot that can compete against others in a game of placing variously shapes on a rectangular playing area. We're given several executable files: a so-called "game engine" and four AI opponents. When run with the appropriate command-line arguments, the game engine will run the student bot together with one of the given bots. It will send random shapes (like generalized Tetris shapes) to each bot in turn along with the current state of the board. The bot must place this shape on the board in such a way that precisely one cell (character) of the new shape overlaps with one of the shapes it placed previously, thus increasing its territory. It mustn't overlap any cell of any of the opponent's territory.
+This project is an implementation of the [01Edu version](https://github.com/01-edu/public/tree/master/subjects/filler) of an exercise called filler.
+
+The challenge is to create a bot (program) that can defeat another bot at a game played on a rectangular board. We're given several executable files: a so-called "game engine" and four opponents. When run, the game engine will launch the two bots specified by command-line arguments. It will send random shapes (like generalized Tetris shapes) to each bot in turn along with the current state of play. The bot must place this shape on the board in such a way that precisely one cell (character) of the new shape overlaps with one of the shapes it placed previously, thus increasing its territory. It mustn't overlap any cell of the opponents territory.
 
 Points are awarded for every shape placed. The instructions don't say whether shapes are worth equal points.
 
-A small technicality, which I'll just mention here to clarify the terminology, is that the shape that a bot receives is actually sent embedded in a rectangle as in the following examples. The rectangle is referred to as a piece. The instructions offer the following examples of pieces.
+A small technicality, which I'll just mention here to clarify the terminology, is that the shape that a bot receives is actually sent embedded in a rectangle as in the following examples. The surrounding rectangle is referred to as a piece. The instructions offer the following examples of pieces.[^1]
 
 ```
 Piece 2 2:
-.#
-#.
+.O
+O.
 
 Piece 5 4:
-.##..
-.##..
-..#..
-...#.
+.OO..
+.OO..
+..O..
+...O.
 
 Piece 6 3:
-.##...
-###...
-#..#..
+.OO...
+OOO...
+O..O..
 ```
 
 To place a piece, a bot writes its coordinates (i.e., we must infer, the coordinates of its top left corner) to stdout, separated by a space and followed by a newline.
 
-To be valid, a move must not extend the player's territory outside the edges of the Anfield.
+To be valid, a move must not extend the player's territory outside the edges of the board.
 
 Eventually one of the players will run out of space and should then make an illegal move: "If your robot can't place anymore peaces\[sic\] he should still return a result (even if invalid), our robots for example return `0 0\n`, when they can't place any more pieces." The instructions don't say whether this forced invalid move has to be correctly formatted, although this might be implicit in the audit question "Can you confirm that the project runs correctly?" If one player crashes or fails to send anything till the game engine imposes a timeout (by default 10s, but configurable), they lose and the game ends there.
 
@@ -49,7 +51,7 @@ This project is my attempt at the [01Edu version](https://github.com/01-edu/publ
 
 One potential difference is that their version of the game is said to stop as soon as one player can't make a legal move, whereas ours continues alowing the other player to place pieces (and hence collect points) as long as they can after that.
 
-I say "potential" because there are some contradictions over this rule. The 42 School instructions say, "The game stops at the first error: either when a game piece cannot be placed anymore or it has been wrongly placed." ("La partie s'arrête à la première erreur: dès qu'une pièce ne peut plus posée ou a été mal posée.") On the other hand, [Ivan Kozlov](https://github.com/ivankozlovcodes/filler/blob/master/resources/usage.gif) at 42 School Silicon Valley in 2018 shows the game continuing in an animated example of his visualizer in action, and [Jani Mäkelä](https://github.com/dal-yth/Filler) at Hive-Helsinki in 2020 remarks, "This repository has both the new (vm2) and old (vm) game masters [i.e. game engines], it is recommended to use the old one (filler_vm.rb) since the new one does not work well with the champions provided. Some of the champions refuse to place any pieces with the new executable and it also stops the game before the winning[^1] player can attempt to fill out the remaining field."[^2]
+I say "potential" because there are some contradictions over this rule. The 42 School instructions say, "The game stops at the first error: either when a game piece cannot be placed anymore or it has been wrongly placed." ("La partie s'arrête à la première erreur: dès qu'une pièce ne peut plus posée ou a été mal posée.") On the other hand, [Ivan Kozlov](https://github.com/ivankozlovcodes/filler/blob/master/resources/usage.gif) at 42 School Silicon Valley in 2018 shows the game continuing in an animated example of his visualizer in action, and [Jani Mäkelä](https://github.com/dal-yth/Filler) at Hive-Helsinki in 2020 remarks, "This repository has both the new (vm2) and old (vm) game masters [i.e. game engines], it is recommended to use the old one (filler_vm.rb) since the new one does not work well with the champions provided. Some of the champions refuse to place any pieces with the new executable and it also stops the game before the winning[^2] player can attempt to fill out the remaining field."[^3]
 
 There are also some trivial differences: 42 School calls the board "plateau" (in both English and French), while 01Edu calls it "Anfield", and different symbols are used for the territories of the two players and their latest moves.
 
@@ -64,9 +66,8 @@ I'd say the 42 School instructions still worth reading even if your objective is
 | Player 2 latest move |    s    |     x     |
 | Empty                |    .    |     .     |
 | New piece            |    O    |     *     |
+| Board                | Anfield |  plateau  |
 ```
-
-Regarding the 01Edu new-piece symbol, the shape cells of the three example pieces in the [pieces](https://github.com/01-edu/public/tree/master/subjects/filler#the-pieces) section are all denoted by '#', but those of the example piece in the [Usage](https://github.com/01-edu/public/tree/master/subjects/filler#usage) section by 'O' (uppercase letter after 'N'). At first, I guessed that the 'O' in the Usage example might be an accidental relic of an earlier version where Player 1's symbol was 'O', as in the 42 School instructions. But, on running the game engine, I see that 01Edu's Linux game engine, at least, currently uses 'O', not '#', for its new-piece symbol.
 
 ## Usage
 
@@ -98,7 +99,7 @@ cargo build --release
 Move or copy them to `docker_file`, noting that the unzipped folder would have been called `filler` but needs some distinguishing mark to make it different from the project folder. On Linux, at least, a final `.` was supplied automatically.
 
 ```sh
-cp mv target/release/filler ../filler./docker_image/solution/
+cp mv target/release/maximilian ../filler./docker_image/solution/
 cp target/release/visualizer ../filler./docker_image/
 ```
 
@@ -121,13 +122,13 @@ docker run -v "$(pwd)/solution":/filler./solution -it filler
 You should now be in a shell session inside the container. To run a game, choose a map and two opponents, e.g. to pit my bot against their terminator:
 
 ```sh
-./linux_game_engine -f maps/map01 -p1 solution/filler -p2 linux_robots/terminator
+./linux_game_engine -f maps/map01 -p1 solution/maximilian -p2 linux_robots/terminator
 ```
 
 To run with the visualizer, exit docker and, on a host machine terminal, enter:
 
 ```sh
-./linux_game_engine -f maps/map01 -p1 solution/filler -p2 linux_robots/terminator | ./visualizer
+./linux_game_engine -f maps/map01 -p1 solution/maximilian -p2 linux_robots/terminator | ./visualizer
 ```
 
 Optionally, you can specify a scale (size) for the visualizer window and/or a duration to wait after parsing and drawing each move.
@@ -160,8 +161,8 @@ No. Indeed, it's perfectly possible to get stuck while your opponent continues t
 
 Yes. Sometimes it might be necessary for a player to send negative numbers as the coordinates of the piece (i.e. its top-left cell). Not all legitimate moves can be expressed otherwise. At first, I wasn't sure whether negative coordinates were accepted by the game engine. The instructions are silent on this point. It seems that the given bot terminator chooses invalid coordinates rather than negative ones, as can be seen by launching the game with this random seed:
 
-```
-./linux_game_engine -f maps/map01 -p2 solution/filler -p1 linux_robots/terminator -s 1749393971253574634
+```bash
+./linux_game_engine -f maps/map01 -p2 solution/maximilian -p1 linux_robots/terminator -s 1749393971253574634
 
 ```
 
@@ -182,9 +183,10 @@ on its initial cell, 4 3.
 
 ### Can pieces extend off the bottom or right of the grid?
 
-Can empty cells of pieces exceed the bottom or right edges of the Anfield? Yet to be determined, but I'm guessing empty cells can go anywhere as long as we follow the rule: "The shape of robots territory must not exceed the area of the Anfield."
+Can empty cells of pieces exceed the bottom or right edges of the board? Yet to be determined, but I'm guessing empty cells can go anywhere as long as we follow the rule: "The shape of robots territory must not exceed the area of the board."
 
 ## Notes
 
-[^1]: When one player gets stuck, the other doesn't necessarily win. The first player to get stuck might still have more more points at the end.
-[^2]: The latter possibility seems more in keeping with the variety of strategies that Jani considers an interesting quality of the game: "... you can approach it in so many different ways. Perhaps your algorithm attempts to seal off half of the map and survive until the bitter end, perhaps you try to box your opponent in so they can't place any more pieces or maybe you try to breach into your opponents area and take over the space they were saving for late game."
+[^1]: The 'O' in these three examples from the [pieces](https://github.com/01-edu/public/tree/master/subjects/filler#the-pieces) section is actually a '#', but this must be a typo or a relic from an earlier version, so I've corrected it here. The example in the [Usage](https://github.com/01-edu/public/tree/master/subjects/filler#usage) section has 'O' (uppercase letter after 'N'), as does the current game engine.
+[^2]: When one player gets stuck, the other doesn't necessarily win. The first player to get stuck might still have more more points at the end.
+[^3]: The latter possibility seems more in keeping with the variety of strategies that Jani considers an interesting quality of the game: "... you can approach it in so many different ways. Perhaps your algorithm attempts to seal off half of the map and survive until the bitter end, perhaps you try to box your opponent in so they can't place any more pieces or maybe you try to breach into your opponents area and take over the space they were saving for late game."
