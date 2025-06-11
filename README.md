@@ -153,7 +153,9 @@ Examples:
   program --duration 75
 ```
 
-You can exit the game at any time with Ctrl+C, or press escape to exit the visualizer.
+You can exit the game at any time with Ctrl+C, or press escape to exit the visualizer. Adjust the scale according to preference, choice of map, and screen size. For me, `-s 10` is good for the biggest map, `map02`. The default `-s 20` works for the medium-sized map, `map01`. You could try `-s 40` for the smallest, `map00`.
+
+Note that the visualizer depends on move-by-move output from the game engine, so the game engine can't be run in quiet mode, `-q`, if you also want to use the visualizer.
 
 ## FAQ
 
