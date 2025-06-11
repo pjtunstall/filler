@@ -199,7 +199,7 @@ My first thought was to go on the attack and move towards the opponent with the 
 
 Originally, for simpicity, I just picked the position whose top-left corner was closest to enemy territory, using the same method to calculate the ([taxicab](https://en.wikipedia.org/wiki/Taxicab_geometry)) distance. That beat the weaker bots but rarely beat terminator.
 
-My current strategy is essentially that of Jani Mäkelä, although I haven't looked at his implementation yet.
+My current strategy is essentially that of [Jani Mäkelä](https://github.com/dal-yth/Filler), although I haven't looked at his implementation yet.
 
 On each turn, my bot, [maximilian](https://en.wikipedia.org/wiki/The_Black_Hole_(1979_film)), considers all possible locations to place the piece. For the valid positions, it weights each of its shape cells, giving them a higher score the closer they are to the opponent's territory. (It uses breadth-first search to find the distance to the nearest enemy cell.) It adds together the scores for each cell and choses the position that maximizes this sum. The purpose of this is to place as many cells as close as possible to the opposing bot to constrain it.[^5]
 
