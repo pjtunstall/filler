@@ -203,7 +203,17 @@ My current strategy is essentially that of [Jani Mäkelä](https://github.com/da
 
 On each turn, my bot, [maximilian](https://en.wikipedia.org/wiki/The_Black_Hole_(1979_film)), considers all possible locations to place the piece. For the valid positions, it weights each of its shape cells, giving them a higher score the closer they are to the opponent's territory. (It uses breadth-first search to find the distance to the nearest enemy cell.) It adds together the scores for each cell and choses the position that maximizes this sum. The purpose of this is to place as many cells as close as possible to the opposing bot to constrain it.[^5]
 
-This beats the weaker bots and is equal to terminator.
+That beats the weaker bots and is equal to terminator.
+
+Jani proposes a further neat trick: he gives the cells right next to the enemy a lower weight (greater cost). This lets your opponent waste its strength, doing the work of filling that gap. Jani suggests that it lessens your opponent's opportunity to "hook around" part of your territory.
+
+```rust
+if cell_distance < 2 {
+    cell_distance = 4;
+}
+```
+
+With this choice of border width and cost, maximilian possibly has a slight advantage over terminator (maximilian 65, terminator 50; 57% to 43%), but I'd need to experiment further to be sure and to see if other values of these parameters are better.
 
 ## What next?
 
