@@ -207,7 +207,7 @@ That beats the weaker bots and is equal to terminator.
 
 Jani proposes a further trick: he gives the cells right next to the enemy a lower weight (greater cost). The intention is to let your opponent waste its strength, doing the work of filling that gap. Jani suggests that it also lessens your opponent's opportunity to "hook around" part of your territory.
 
-I need to experiment more to see if this can help. It hasn't offered any clear advantage to me yet with any of the values I've tried for the two parameters: border width and cost adjustment. For example, with this choice of border width and cost, terminator beat maximilian 100 to 99.
+I need to experiment more to see if this can help. It hasn't offered a clear advantage to me yet with any of the values I've tried for the two parameters: border width and cost adjustment. For example, with this choice of border width and cost, terminator beat maximilian 100 to 99.
 
 ```rust
 if cell_distance < 2 {
@@ -215,7 +215,7 @@ if cell_distance < 2 {
 }
 ```
 
-Given the lack of effect, I've removed these lines for now.
+Given the lack of benefit, I've removed these lines for now.
 
 ## Other ideas
 
