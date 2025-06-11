@@ -11,7 +11,7 @@
   - [Can you send negative coordinates?](#can-you-send-negative-coordinates)
   - [Can pieces extend off the bottom or right of the grid?](#can-pieces-extend-off-the-bottom-or-right-of-the-grid)
 - [Strategy](#strategy)
-- [What next?](#what-next)
+- [Other ideas](#other-ideas)
 - [Notes](#notes)
 
 ## Context
@@ -205,7 +205,9 @@ On each turn, my bot, [maximilian](https://en.wikipedia.org/wiki/The_Black_Hole_
 
 That beats the weaker bots and is equal to terminator.
 
-Jani proposes a further neat trick: he gives the cells right next to the enemy a lower weight (greater cost). This lets your opponent waste its strength, doing the work of filling that gap. Jani suggests that it lessens your opponent's opportunity to "hook around" part of your territory.
+Jani proposes a further trick: he gives the cells right next to the enemy a lower weight (greater cost). The intention is to let your opponent waste its strength, doing the work of filling that gap. Jani suggests that it also lessens your opponent's opportunity to "hook around" part of your territory.
+
+I need to experiment more to see if this can help. It hasn't offered any clear advantage to me yet with any of the values I've tried for the two parameters: border width and cost adjustment. For example, with this choice of border width and cost, terminator beat maximilian 100 to 99.
 
 ```rust
 if cell_distance < 2 {
@@ -213,13 +215,15 @@ if cell_distance < 2 {
 }
 ```
 
-With this choice of border width and cost, maximilian possibly has a slight advantage over terminator (maximilian 65, terminator 50; 57% to 43%), but I'd need to experiment further to be sure and to see if other values of these parameters are better.
+Given the lack of effect, I've removed these lines for now.
 
-## What next?
+## Other ideas
 
-I've tried lowering the weight of the cells bordering enemy territory as Jani suggests. He makes a plausible argument as to why this would help, and says it did help him, but I haven't noticed any difference, so my current implementation omits this refinement.
+I've played with the idea of giving maximilian different behavior on the first few moves, such as fanning out, but all the variations I've tried so far make it worse. Maybe there's some other pattern out there that would work.
 
-I've also played with the idea of giving maximilian different behavior on the first few moves, such as fanning out, but all the variations I've tried so far make it worse. But maybe there is a pattern out there that would work.
+I've tried [Robin Schramm (wobula)'s](https://github.com/wobula/filler) idea of giving moderate preference to a vertical line dividing the board down the middle. (Like Jani, he gives high preference to cells close to but not adjacent to enemy territory.) However, this caused a deterioration in performance for me. With this tweak, terminator consistently won. It's possible I just didn't find the right weight to give the center line or that there's some other feature of my implementation that's thwarting its effectiveness. Robin's README is well worth a look. The "heatmap" shows exactly how he's weighting the cells, and his statement of the rules clarifies some points in the official instructions, in particular, the rules concerning bounds.
+
+Another 42 School sudent, [Pierre Bondoerffer](https://github.com/pbondoer/42-filler), has a curious remark on his filler README: "Filler's VM wraps the map around, so there's ways to take advantage of that." This can't mean that a piece placed so that it extends outside one edge of the board will wrap around to the other side. That would be at odds with the rule that shape cells mustn't extend outside of the playing area. Or, to put it another way, the rule would be superfluous. Indeed, my bot loses by making an erroneous move when I remove the bounds-check condition. I can't think what else it could mean though.
 
 ## Notes
 
