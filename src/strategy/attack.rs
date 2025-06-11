@@ -29,14 +29,29 @@ pub fn place(anfield: &Anfield, piece: &Piece) -> [i32; 2] {
     [x, y]
 }
 
+// The "casting gymnastics" here (and in `try_fit`) are to allow pieces to be placed in such a way that their top-left corner is outside of the Anfield, as long as their shape cells are inside it. This can prevent the bot from getting stuck in situations where that's is the only way to make a piece overlap its territory.
 fn get_possible_placements(anfield: &Anfield, piece: &Piece) -> Vec<PossiblePlacement> {
     let mut possible_placements = Vec::new();
-    for x in 0..(anfield.width) {
-        for y in 0..(anfield.height) {
-            if let Some(mut possible_placement) = try_fit(anfield, &piece, x, y) {
+
+    let x_min = -(piece.width as isize);
+    let x_max = anfield.width as isize;
+    let y_min = -(piece.height as isize);
+    let y_max = anfield.height as isize;
+
+    for x in x_min..x_max {
+        for y in y_min..y_max {
+            if let Some(mut possible_placement) = try_fit(anfield, piece, x, y) {
                 for cell in &piece.shape {
-                    let s = x + cell.x;
-                    let t = y + cell.y;
+                    let s = x + cell.x as isize;
+                    let t = y + cell.y as isize;
+                    assert!(
+                        s >= 0 && t >= 0,
+                        "Negative cell placement coordinates: ({}, {})",
+                        s,
+                        t
+                    );
+                    let s = s as usize;
+                    let t = t as usize;
                     let cell_distance = get_distance_to_opponent(anfield, s, t);
                     let cell_weight = usize::MAX - cell_distance;
                     possible_placement.weight += cell_weight;
@@ -45,23 +60,25 @@ fn get_possible_placements(anfield: &Anfield, piece: &Piece) -> Vec<PossiblePlac
             }
         }
     }
-    if possible_placements.len() == 0 {
+
+    if possible_placements.is_empty() {
         possible_placements.push(PossiblePlacement::default());
     }
+
     possible_placements
 }
 
-fn try_fit(anfield: &Anfield, piece: &Piece, x: usize, y: usize) -> Option<PossiblePlacement> {
+fn try_fit(anfield: &Anfield, piece: &Piece, x: isize, y: isize) -> Option<PossiblePlacement> {
     let mut overlaps_with_own_territory = 0;
     for cell in &piece.shape {
-        let s = x + cell.x;
-        let t = y + cell.y;
+        let s = x + cell.x as isize;
+        let t = y + cell.y as isize;
 
-        if s >= anfield.width || t >= anfield.height {
+        if s >= anfield.width as isize || t >= anfield.height as isize || s < 0 || t < 0 {
             return None;
         }
 
-        let cell_role = anfield.get_cell_role(s, t);
+        let cell_role = anfield.get_cell_role(s as usize, t as usize);
         match cell_role {
             Some(CellRole::OpponentSymbol | CellRole::OpponentLatestMove) => return None,
             Some(CellRole::OwnSymbol | CellRole::OwnLatestMove) => overlaps_with_own_territory += 1,
@@ -74,7 +91,11 @@ fn try_fit(anfield: &Anfield, piece: &Piece, x: usize, y: usize) -> Option<Possi
         return None;
     }
 
-    Some(PossiblePlacement { x, y, weight: 0 })
+    Some(PossiblePlacement {
+        x: x as usize,
+        y: y as usize,
+        weight: 0,
+    })
 }
 
 fn get_distance_to_opponent(anfield: &Anfield, x: usize, y: usize) -> usize {

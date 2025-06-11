@@ -15,7 +15,7 @@
 - [Notes](#notes)
 
 ## Context
-Screenshot from my vizualizer of bots competing at filler
+
 This project is an implementation of the [01Edu version](https://github.com/01-edu/public/tree/master/subjects/filler) of an exercise called filler.
 
 The challenge is to create a bot (program) that can defeat another bot at a game played on a rectangular board. We're given several executable files: a so-called "game engine" and four opponents. When run, the game engine will launch the two bots specified by command-line arguments. It will send random shapes (like generalized Tetris shapes) to each bot in turn along with the current state of play. The bot must place this shape on the board in such a way that precisely one cell (character) of the new shape overlaps with one of the shapes it placed previously, thus increasing its territory. It mustn't overlap any cell of the opponents territory.
@@ -102,27 +102,27 @@ Compile the binaries for my bot and visualizer:
 cargo build --release
 ```
 
-Move or copy them to `docker_file`, noting that the unzipped folder would have been called `filler` but needs some distinguishing mark to make it different from the project folder. On Linux, at least, a final `.` was supplied automatically.
+Move or copy them to the appropriate destinations, noting that the unzipped folder would have been called `filler` but needs some distinguishing mark to make it different from the project folder. On Linux, at least, a final `.` was supplied automatically.
 
 ```sh
 cp target/release/maximilian ../filler./docker_image/solution/
 cp target/release/visualizer ../filler./docker_image/
 ```
 
-Optionally, copy the launch script there too:
+Optionally, copy the launch script to `docker_image` too:
 
 ```sh
 cp launch.sh filler./docker_image/
 ```
 
-This will let you run the container with `./launch.sh`, as a convenience, instead of having to type the elaborate run command, `docker run` etc., from the code block that follows.
+This script is just a conveniece to let you run the container with `./launch.sh`, instead of having to type the elaborate run command, `docker run` etc., from the code block that follows.
 
 Navigate into the `docker_image` folder, then build and run the docker container:
 
 ```sh
 cd filler./docker_image
 docker build -t filler .
-docker run -v "$(pwd)/solution":/filler./solution -it filler
+docker run -v "$(pwd)/solution":/filler./solution -it filler # Or `./launch.sh` if using the script.
 ```
 
 You should now be in a shell session inside the container. To run a game, choose a map and two opponents, e.g. to pit my bot against their terminator:
@@ -131,13 +131,15 @@ You should now be in a shell session inside the container. To run a game, choose
 ./linux_game_engine -f maps/map01 -p1 solution/maximilian -p2 linux_robots/terminator
 ```
 
+... assuming you're on Linux. If on Apple silicon, you have the option to use `./m1_game_engine` and `m1_robots`.
+
 To run with the visualizer, exit docker (e.g. with Ctrl+D) and, on your host machine terminal, enter:
 
 ```sh
 ./linux_game_engine -f maps/map01 -p1 solution/maximilian -p2 linux_robots/terminator | ./visualizer
 ```
 
-Optionally, you can specify a scale (size) for the visualizer window and/or a duration to wait after parsing and drawing each move.
+(... or the m1 equivalent.) Optionally, you can specify a scale (size) for the visualizer window and/or a duration to wait after parsing and drawing each move.
 
 ```
 Usage: ... | ./visualizer [-s|--scale SCALE] [-d|--duration DURATION]
@@ -189,27 +191,25 @@ on its initial cell, 4 3.
 
 ### Can pieces extend off the bottom or right of the grid?
 
-Can empty cells of pieces exceed the bottom or right edges of the board? Yet to be determined, but I'm guessing empty cells can go anywhere as long as we follow the rule: "The shape of robots territory must not exceed the area of the board."
+Yes, as long as this rule is observed: "The shape of robots territory must not exceed the area of the board." That is to say, the shape cells (nonempty cells) of the piece must be within the playing area.
 
 ## Strategy
 
 My first thought was to go on the attack and move towards the opponent with the aim of surrounding them.
 
-Originally, for simpicity, I just picked the position whose top-left corner was closest to enemy territory, using the same method to calculate the ([taxicab](https://en.wikipedia.org/wiki/Taxicab_geometry)) distance. That beat the weaker bots but only very occasionally beat terminator.
+Originally, for simpicity, I just picked the position whose top-left corner was closest to enemy territory, using the same method to calculate the ([taxicab](https://en.wikipedia.org/wiki/Taxicab_geometry)) distance. That beat the weaker bots but rarely beat terminator.
 
 My current strategy is essentially that of Jani Mäkelä, although I haven't looked at his implementation yet.
 
-On each turn, my bot, [maximilian](https://en.wikipedia.org/wiki/The_Black_Hole_(1979_film)), considers all possible locations to place the piece. For the valid positions, it weights each of its shape cells, giving them a higher score the closer they are to the opponent's territory. (It uses breadth-first search to find the distance to the nearest enemy cell.) It adds together the scores for each cell and choses the position that maximizes this sum. The purpose of this is to place as many cells as close as possible to the opposing bot to constrain it.
+On each turn, my bot, [maximilian](https://en.wikipedia.org/wiki/The_Black_Hole_(1979_film)), considers all possible locations to place the piece. For the valid positions, it weights each of its shape cells, giving them a higher score the closer they are to the opponent's territory. (It uses breadth-first search to find the distance to the nearest enemy cell.) It adds together the scores for each cell and choses the position that maximizes this sum. The purpose of this is to place as many cells as close as possible to the opposing bot to constrain it.[^5]
 
-This beats the weaker bots[^5] and is equal to terminator.
+This beats the weaker bots and is equal to terminator.
 
 ## What next?
 
-I've tried lowering the weight of the cells bordering enemy territory as Jani suggests. He makes a plausible argument as to why this would help, and says it did help him, but I haven't noticed any difference.
+I've tried lowering the weight of the cells bordering enemy territory as Jani suggests. He makes a plausible argument as to why this would help, and says it did help him, but I haven't noticed any difference, so my current implementation omits this refinement.
 
-I've also played with the idea of giving maximilian different behavior on the first few moves, but all the variations I've tried so far make it worse.
-
-It would be nice to implement negative coordinate placements.
+I've also played with the idea of giving maximilian different behavior on the first few moves, such as fanning out, but all the variations I've tried so far make it worse. But maybe there is a pattern out there that would work.
 
 ## Notes
 
@@ -217,4 +217,4 @@ It would be nice to implement negative coordinate placements.
 [^2]: The "coordinates" of a piece are nowhere definied explicitly, as far as I can see, but can be inferred from the fact that `7 2\n` is a legitimate way to place `.OO.` in the example of the [Usage](https://github.com/01-edu/public/tree/master/subjects/filler#usage) section, given that the player's territory so far consists of just one cell, `9 2`.
 [^3]: When one player gets stuck, the other doesn't necessarily win. The first player to get stuck might still have more more points at the end.
 [^4]: The latter possibility seems more in keeping with the variety of strategies that Jani considers an interesting quality of the game: "... you can approach it in so many different ways. Perhaps your algorithm attempts to seal off half of the map and survive until the bitter end, perhaps you try to box your opponent in so they can't place any more pieces or maybe you try to breach into your opponents area and take over the space they were saving for late game."
-[^5]: ... except for those rare occaasions when maximilian is player one and gets stuck on the first move due to me not having implemented negative coordinate placements yet. (This can happen to terminator too.) With a little bit of work, I could make it so that pieces could be placed with some of their empty cells off the top or left of the board. It would be nice, but not enough currently to tip the balance against terminator, I think.
+[^5]: I chose this technique over just finding the minimum distance out of all the cells of the piece to be placed because I wanted to favor, for example, putting a long shape parallel to the border of the opponent's territory rather than end-on to it.
