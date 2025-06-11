@@ -109,20 +109,12 @@ cp target/release/maximilian ../filler./docker_image/solution/
 cp target/release/visualizer ../filler./docker_image/
 ```
 
-Optionally, copy the launch script to `docker_image` too:
-
-```sh
-cp launch.sh filler./docker_image/
-```
-
-This script is just a conveniece to let you run the container with `./launch.sh`, instead of having to type the elaborate run command, `docker run` etc., from the code block that follows.
-
-Navigate into the `docker_image` folder, then build and run the docker container:
+Navigate into the `docker_image` folder, then build and run the docker container:[^5]
 
 ```sh
 cd filler./docker_image
 docker build -t filler .
-docker run -v "$(pwd)/solution":/filler./solution -it filler # Or `./launch.sh` if using the script.
+docker run --rm -v "$(pwd)/solution":/filler./solution -it filler
 ```
 
 You should now be in a shell session inside the container. To run a game, choose a map and two opponents, e.g. to pit my bot against their terminator:
@@ -203,7 +195,7 @@ Originally, for simpicity, I just picked the position whose top-left corner was 
 
 My current strategy is essentially that of [Jani Mäkelä](https://github.com/dal-yth/Filler), although I haven't looked at his implementation yet.
 
-On each turn, my bot, [maximilian](https://en.wikipedia.org/wiki/The_Black_Hole_(1979_film)), considers all possible locations to place the piece. For the valid positions, it weights each of its shape cells, giving them a higher score the closer they are to the opponent's territory. (It uses breadth-first search to find the distance to the nearest enemy cell.) It adds together the scores for each cell and choses the position that maximizes this sum. The purpose of this is to place as many cells as close as possible to the opposing bot to constrain it.[^5]
+On each turn, my bot, [maximilian](https://en.wikipedia.org/wiki/The_Black_Hole_(1979_film)), considers all possible locations to place the piece. For the valid positions, it weights each of its shape cells, giving them a higher score the closer they are to the opponent's territory. (It uses breadth-first search to find the distance to the nearest enemy cell.) It adds together the scores for each cell and choses the position that maximizes this sum. The purpose of this is to place as many cells as close as possible to the opposing bot to constrain it.[^6]
 
 That beats the weaker bots and is equal to terminator.
 
@@ -233,4 +225,5 @@ Another 42 School sudent, [Pierre Bondoerffer](https://github.com/pbondoer/42-fi
 [^2]: The "coordinates" of a piece are nowhere definied explicitly, as far as I can see, but can be inferred from the fact that `7 2\n` is a legitimate way to place `.OO.` in the example of the [Usage](https://github.com/01-edu/public/tree/master/subjects/filler#usage) section, given that the player's territory so far consists of just one cell, `9 2`.
 [^3]: When one player gets stuck, the other doesn't necessarily win. The first player to get stuck might still have more more points at the end.
 [^4]: The latter possibility seems more in keeping with the variety of strategies that Jani considers an interesting quality of the game: "... you can approach it in so many different ways. Perhaps your algorithm attempts to seal off half of the map and survive until the bitter end, perhaps you try to box your opponent in so they can't place any more pieces or maybe you try to breach into your opponents area and take over the space they were saving for late game."
-[^5]: I chose this technique over just finding the minimum distance out of all the cells of the piece to be placed because I wanted to favor, for example, putting a long shape parallel to the border of the opponent's territory rather than end-on to it.
+[^5]: I've added `--rm` after `docker run` so that the container will be automatically deleted when it exits. The command as given in the instructions is simply `docker run --rm -v "$(pwd)/solution":/filler./solution -it filler`.
+[^6]: I chose this technique over just finding the minimum distance out of all the cells of the piece to be placed because I wanted to favor, for example, putting a long shape parallel to the border of the opponent's territory rather than end-on to it.
