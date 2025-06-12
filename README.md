@@ -84,7 +84,9 @@ git clone https://github.com/pjtunstall/filler
 cd filler
 ```
 
-Download the docker_image folder as a zip file [here](https://assets.01-edu.org/filler/filler.zip) from the 01Edu public repo. To suppress the warning `JSONArgsRecommended: JSON arguments recommended for ENTRYPOINT to prevent unintended behavior related to OS signals (line 11)` that would otherwise appear when you build the container, change the final line of the Dockerfile from
+Download the zipped resources [here](https://assets.01-edu.org/filler/filler.zip) from the 01Edu public repo. This would unzip to a folder called `filler`, except that we already have one of that name (my project folder). Assuming you're unzipping it in the same place, it will have to be called something else. For example, for me, on Linux, it unzips automatically to `filler.` with a trailing dot to distinguish it. If the names are distinguished differently on your system, you'll have to adjust any commands that involve `filler.` in what follows. Consider this when troubleshooting!
+
+To suppress the warning `JSONArgsRecommended: JSON arguments recommended for ENTRYPOINT to prevent unintended behavior related to OS signals (line 11)` that would otherwise appear when you build the container, change the final line of the Dockerfile from
 
 ```Dockerfile
 ENTRYPOINT /bin/bash
@@ -96,42 +98,46 @@ to
 CMD ["/bin/bash"]
 ```
 
-Compile the binaries for my bot and visualizer:
+Inside the root folder of my Rust project, `filler`, compile the binaries for my bot and visualizer:
 
 ```sh
 cargo build --release
 ```
 
-Move or copy them to the appropriate destinations, noting that the unzipped folder would have been called `filler` but needs some distinguishing mark to make it different from the project folder. On Linux, at least, a final `.` was supplied automatically.
+Move or copy them to the appropriate destinations:
 
 ```sh
 cp target/release/maximilian ../filler./docker_image/solution/
 cp target/release/visualizer ../filler./docker_image/
 ```
 
-Navigate into the `docker_image` folder, then build and run the docker container:[^5]
+(Remember that trailing `.` in the destination `filler.`.)
+
+Ensure that you have Docker installed. If using Docker Desktop, launch it. Navigate into the `docker_image` folder, then build and run the container:[^5]
 
 ```sh
-cd filler./docker_image
-docker build -t filler .
+cd ../filler./docker_image # Assuming you were in the root of my Rust project.
+docker build -t filler . # `filler` with no dot is will be the name of the container.
 docker run --rm -v "$(pwd)/solution":/filler./solution -it filler
 ```
 
-You should now be in a shell session inside the container. To run a game, choose a map and two opponents, e.g. to pit my bot against their terminator:
+You should now be in a shell session inside the container. To run a game, choose a map and two opponents, e.g. to pit my bot against the supplied reigning champion, terminator:
 
 ```sh
 ./linux_game_engine -f maps/map01 -p1 solution/maximilian -p2 linux_robots/terminator
 ```
 
-... assuming you're on Linux. If on Apple silicon, you have the option to use `./m1_game_engine` and `m1_robots`.
+... assuming you're on Linux. If on Apple silicon, substitute `./m1_game_engine` and `m1_robots`.
 
-To run with the visualizer, exit docker (e.g. with Ctrl+D) and, on your host machine terminal, enter:
+To run with the visualizer, exit the container (e.g. with Ctrl+D) and, on your host machine terminal, enter:
 
 ```sh
 ./linux_game_engine -f maps/map01 -p1 solution/maximilian -p2 linux_robots/terminator | ./visualizer
 ```
 
-(... or the m1 equivalent.) Optionally, you can specify a scale (size) for the visualizer window and/or a duration to wait after parsing and drawing each move.
+(... or the m1 equivalent.) Note that the visualizer depends on move-by-move output from the game engine, so the game engine can't be run in quiet mode, `-q`, with the visualizer.
+
+Optionally, you can specify a scale (size) for the visualizer window and/or a duration to wait after parsing and drawing each move.
 
 ```
 Usage: ... | ./visualizer [-s|--scale SCALE] [-d|--duration DURATION]
@@ -145,9 +151,7 @@ Examples:
   program --duration 75
 ```
 
-You can exit the game at any time with Ctrl+C, or press escape to exit the visualizer. Adjust the scale according to preference, choice of map, and screen size. For me, `-s 10` is good for the biggest map, `map02`. The default `-s 20` works for the medium-sized map, `map01`. You could try `-s 40` for the smallest, `map00`.
-
-Note that the visualizer depends on move-by-move output from the game engine, so the game engine can't be run in quiet mode, `-q`, if you also want to use the visualizer.
+You can exit the game at any time with Ctrl+C, or press escape to exit the visualizer. Adjust the scale according to preference, choice of map, and screen size. For me, `-s 10` is good for the biggest map, `map02`. The default `-s 20` works for the medium-sized map, `map01`. For the smallest, `map00`, you could try `-s 40`.
 
 ## FAQ
 
@@ -215,9 +219,9 @@ Given the lack of benefit, I've removed these lines for now.
 
 I've played with the idea of giving maximilian different behavior on the first few moves, such as fanning out, but all the variations I've tried so far make it worse. Maybe there's some other pattern out there that would work.
 
-I've tried [Robin Schramm (wobula)'s](https://github.com/wobula/filler) idea of giving moderate preference to a vertical line dividing the board down the middle. (Like Jani, he gives high preference to cells close to enemy territory. It's not clear to me whether he leaves a border of less desirable cells around the opponent; it looks like maybe not.) However, this caused a deterioration in performance for me: terminator consistently won. It's possible I just didn't find the right weight to give the center line or that there's some other feature of my implementation that's thwarting its effectiveness. Robin's README is well worth a look. The "heatmap" gives some idea of how he's weighting the cells, and his statement of the rules clarifies some points in the official instructions, in particular, the rules concerning bounds.
+I've tried [Robin Schramm (wobula)'s](https://github.com/wobula/filler) idea of giving moderate preference to a vertical line dividing the board down the middle. (Like Jani, he gives high preference to cells close to enemy territory. It's not clear to me whether he leaves a border of less desirable cells around the opponent; it looks like maybe not.) However, this caused a deterioration in performance for me: terminator consistently won. It's possible I just didn't find the right weight to give the center line or that there's some other feature of my implementation that's thwarting its effectiveness. Robin's README is well worth a look. The "heatmap" gives an idea of how he's weighting the cells, and his statement of the rules clarifies some points in the official instructions, in particular, the rules concerning bounds.
 
-Another 42 School sudent, [Pierre Bondoerffer](https://github.com/pbondoer/42-filler), has a curious remark on his filler README: "Filler's VM wraps the map around, so there's ways to take advantage of that." This can't mean that a piece placed so that it extends outside one edge of the board will wrap around to the other side. That would be at odds with the rule that shape cells mustn't extend outside of the playing area. Or, to put it another way, the rule would be superfluous. Indeed, my bot loses by making an erroneous move when I remove the bounds-check condition. I can't think what else it could mean though.
+Another 42 School sudent, [Pierre Bondoerffer](https://github.com/pbondoer/42-filler), has a curious remark on his filler README: "Filler's VM wraps the map around, so there's ways to take advantage of that." I'm not sure what he means by this. It can't be that a piece placed so that it extends outside one edge of the board will wrap around to the other side. That would be at odds with the rule that shape cells mustn't extend outside of the playing area. Or, to put it another way, the rule would be superfluous. Indeed, my bot loses by making an erroneous move when I remove the bounds-check condition.
 
 ## Notes
 
@@ -225,5 +229,5 @@ Another 42 School sudent, [Pierre Bondoerffer](https://github.com/pbondoer/42-fi
 [^2]: The "coordinates" of a piece are nowhere definied explicitly, as far as I can see, but can be inferred from the fact that `7 2\n` is a legitimate way to place `.OO.` in the example of the [Usage](https://github.com/01-edu/public/tree/master/subjects/filler#usage) section, given that the player's territory so far consists of just one cell, `9 2`.
 [^3]: When one player gets stuck, the other doesn't necessarily win. The first player to get stuck might still have more more points at the end.
 [^4]: The latter possibility seems more in keeping with the variety of strategies that Jani considers an interesting quality of the game: "... you can approach it in so many different ways. Perhaps your algorithm attempts to seal off half of the map and survive until the bitter end, perhaps you try to box your opponent in so they can't place any more pieces or maybe you try to breach into your opponents area and take over the space they were saving for late game."
-[^5]: I've added `--rm` after `docker run` so that the container will be automatically deleted when it exits. The command as given in the instructions is simply `docker run --rm -v "$(pwd)/solution":/filler./solution -it filler`.
+[^5]: I've added `--rm` after `docker run` so that the container will be automatically deleted when it exits. The command as given in the instructions is simply `docker run -v "$(pwd)/solution":/filler./solution -it filler` (except that `filler.` is just `filler` for them).
 [^6]: I chose this technique over just finding the minimum distance out of all the cells of the piece to be placed because I wanted to favor, for example, putting a long shape parallel to the border of the opponent's territory rather than end-on to it.
