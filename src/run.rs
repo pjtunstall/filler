@@ -16,11 +16,9 @@ pub fn run(strategy: impl Strategy) -> Result<(), Box<dyn std::error::Error>> {
     let mut game = Game { anfield, strategy };
 
     loop {
-        // Since stdout is consumed by the game engine, we can't rely on it for logging errors.
-        if let Err(e) = game.anfield.parse(&mut lines) {
-            std::fs::write("/tmp/filler_error.log", format!("Parse error: {}", e)).ok();
-            return Err(e.into());
-        }
+        game.anfield
+            .parse(&mut lines)
+            .expect("Failed to parse Anfield");
 
         let next_line = parse::read_line(&mut lines, "piece header")?;
         let [width, height] = parse::get_width_and_height(next_line);

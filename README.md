@@ -11,7 +11,7 @@
   - [Can you send negative coordinates?](#can-you-send-negative-coordinates)
   - [Can pieces extend off the bottom or right of the grid?](#can-pieces-extend-off-the-bottom-or-right-of-the-grid)
 - [Strategy](#strategy)
-- [Other ideas](#other-ideas)
+- [Other strategy ideas](#other-strategy-ideas)
 - [Notes](#notes)
 
 ## Context
@@ -215,7 +215,7 @@ if cell_distance < 2 {
 
 Given the lack of benefit, I've removed these lines for now.
 
-## Other ideas
+## Other strategy ideas
 
 I've played with the idea of giving maximilian different behavior on the first few moves, such as fanning out, but all the variations I've tried so far make it worse. Maybe there's some other pattern out there that would work.
 
