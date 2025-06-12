@@ -29,7 +29,7 @@ pub fn place(anfield: &Anfield, piece: &Piece) -> [i32; 2] {
     [x, y]
 }
 
-// The "casting gymnastics" here (and in `try_fit`) are to allow pieces to be placed in such a way that their top-left corner is outside of the Anfield, as long as their shape cells are inside it. This can prevent the bot from getting stuck in situations where that's is the only way to make a piece overlap its territory.
+// The "casting gymnastics" here (and in `try_fit`) are to allow pieces to be placed in such a way that their top-left corner is outside of the Anfield, as long as their shape cells are inside it. This can prevent the bot from getting stuck in situations where that's the only way to make a piece overlap its territory.
 fn get_possible_placements(anfield: &Anfield, piece: &Piece) -> Vec<PossiblePlacement> {
     let mut possible_placements = Vec::new();
 
