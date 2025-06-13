@@ -5,6 +5,7 @@
 - [Context](#context)
 - [Versions](#versions)
 - [Usage](#usage)
+- [Tests and error handling](#tests-and-error-handling)
 - [FAQ](#faq)
   - [Can pieces be rotated?](#can-pieces-be-rotated)
   - [Should your bot exit after playing its final move?](#should-your-bot-exit-after-playing-its-final-move)
@@ -152,6 +153,16 @@ Examples:
 ```
 
 You can exit the game at any time with Ctrl+C, or press escape to exit the visualizer. Adjust the scale according to preference, choice of map, and screen size. For me, `-s 10` is good for the biggest map, `map02`. The default `-s 20` works for the medium-sized map, `map01`. For the smallest, `map00`, you could try `-s 40`.
+
+## Tests and error handling
+
+To run the tests:
+
+```sh
+cargo test
+```
+
+Due to the fact that output is piped to the game engine, the usefulness of error handling is largely confined to testing. A panic will end the game, at least, but if an error message isn't triggered as a side effect of a test, it probably won't be seen.
 
 ## FAQ
 

@@ -151,7 +151,10 @@ Piece 8 2:
         assert!(result.is_ok(), "Expected Ok, got Err: {:?}", result);
         let mv = result.unwrap();
         println!("Move: {mv}");
-        assert!(mv.contains(' '), "Expected move format like 'x y'");
+        assert!(
+            mv.split(' ').collect::<Vec<_>>().len() == 2,
+            "Expected move format like 'x y'"
+        );
     }
 
     #[test]
@@ -238,7 +241,10 @@ O
         assert!(result.is_ok(), "Expected Ok, got Err: {:?}", result);
         let mv = result.unwrap();
         println!("Move: {mv}");
-        assert!(mv.contains(' '), "Expected move format like 'x y'");
+        assert!(
+            mv.split(' ').collect::<Vec<_>>().len() == 2,
+            "Expected move format like 'x y'"
+        );
 
         let result = game.next();
         assert!(result.is_some(), "Expected Some from game.next()");
@@ -246,6 +252,9 @@ O
         assert!(result.is_ok(), "Expected Ok, got Err: {:?}", result);
         let mv = result.unwrap();
         println!("Move: {mv}");
-        assert!(mv.contains(' '), "Expected move format like 'x y'");
+        assert!(
+            mv.split(' ').collect::<Vec<_>>().len() == 2,
+            "Expected move format like 'x y'"
+        );
     }
 }
