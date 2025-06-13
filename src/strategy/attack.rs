@@ -53,8 +53,7 @@ fn get_possible_placements(anfield: &Anfield, piece: &Piece) -> Vec<PossiblePlac
                     let s = s as usize;
                     let t = t as usize;
                     let cell_distance = get_distance_to_opponent(anfield, s, t);
-                    let cell_weight = usize::MAX - cell_distance;
-                    possible_placement.weight += cell_weight;
+                    possible_placement.weight += anfield.width + anfield.height - cell_distance;
                 }
                 possible_placements.push(possible_placement);
             }

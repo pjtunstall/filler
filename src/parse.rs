@@ -16,7 +16,7 @@ where
     }
 }
 
-pub fn get_ids(line: String) -> Result<[u8; 2], GameError> {
+pub fn get_ids(line: String) -> Result<u8, GameError> {
     let c = line
         .chars()
         .nth(10)
@@ -29,9 +29,9 @@ pub fn get_ids(line: String) -> Result<[u8; 2], GameError> {
     })?;
 
     if digit == 1 {
-        Ok([1, 2])
+        Ok(1)
     } else if digit == 2 {
-        Ok([2, 1])
+        Ok(2)
     } else {
         Err(GameError::ParsePlayerIds("wrong digit".to_string()))
     }
@@ -75,11 +75,11 @@ mod tests {
     fn test_get_ids_success() {
         let p1 = "$$$ exec p1 : [robots/bender]";
         let ids1 = get_ids(p1.to_string()).expect("Failed to get ID for player 1");
-        assert_eq!(ids1, [1, 2]);
+        assert_eq!(ids1, 1);
 
         let p2 = "$$$ exec p2 : [robots/bender]";
         let ids2 = get_ids(p2.to_string()).expect("Failed to get ID for player 2");
-        assert_eq!(ids2, [2, 1]);
+        assert_eq!(ids2, 2);
     }
 
     #[test]

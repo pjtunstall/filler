@@ -1,9 +1,9 @@
-use std::{fmt, io };
+use std::{fmt, io};
 
 use crate::{
     bimap::BiMap,
     parse,
-    symbols::{self, CellRole, Chars}
+    symbols::{self, CellRole, Chars},
 };
 
 #[derive(Debug)]
@@ -52,7 +52,7 @@ impl fmt::Display for Anfield {
 }
 
 impl Anfield {
-    pub fn new(width: usize, height: usize, own_id: u8) -> Self {
+    pub fn new(own_id: u8) -> Self {
         let mut char_to_role = BiMap::new();
         let Chars {
             own_char,
@@ -62,9 +62,9 @@ impl Anfield {
         } = symbols::populate_char_to_role(&mut char_to_role, own_id);
 
         Self {
-            width,
-            height,
-            cells: vec![CellRole::Empty; width * height],
+            width: 0,
+            height: 0,
+            cells: Vec::new(),
             own_char,
             opponent_char,
             own_latest_char,
@@ -96,25 +96,30 @@ impl Anfield {
     }
 
     pub fn parse(
-    &mut self,
-    lines: &mut impl Iterator<Item = Result<String, io::Error>>,
-) -> Result<(), io::Error> {
-    let _ = parse::read_line(lines, "column numbers")?; // Skip column numbers
+        &mut self,
+        lines: &mut impl Iterator<Item = Result<String, io::Error>>,
+    ) -> Result<(), io::Error> {
+        let _ = parse::read_line(lines, "column numbers")?; // Skip column numbers.
 
-    let mut field = Vec::with_capacity(self.height);
-    for _ in 0..self.height {
-        let line = parse::read_line(lines, "field")?;
-        field.push(line[4..].to_string()); // Skip row number
-    }
-
-    for (y, line) in field.iter().enumerate() {
-        for (x, c) in line.chars().enumerate() {
-            self.parse_cell(x, y, c);
+        let mut field = Vec::with_capacity(self.height);
+        for _ in 0..self.height {
+            let line = parse::read_line(lines, "field")?;
+            field.push(line[4..].to_string()); // Skip row number.
         }
+
+        for (y, line) in field.iter().enumerate() {
+            for (x, c) in line.chars().enumerate() {
+                self.parse_cell(x, y, c);
+            }
+        }
+
+        Ok(())
     }
 
-    Ok(())
-}
-
-
+    pub fn set_dimensions(&mut self, width: usize, height: usize) {
+        assert!(self.width == 0, "Should not try to re-initialize Anfield");
+        self.width = width;
+        self.height = height;
+        self.cells = vec![CellRole::Empty; width * height];
+    }
 }
