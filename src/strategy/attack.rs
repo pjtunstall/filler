@@ -1,12 +1,6 @@
 use std::collections::VecDeque;
 
-use crate::{
-    anfield::Anfield,
-    cell::Cell,
-    piece::{Piece, PossiblePlacement},
-    strategy::Strategy,
-    symbols::CellRole,
-};
+use crate::{anfield::Anfield, cell::Cell, piece::Piece, strategy::Strategy, symbols::CellRole};
 
 pub struct Attack;
 
@@ -14,6 +8,13 @@ impl Strategy for Attack {
     fn choose_move(&self, anfield: &Anfield, piece: &Piece) -> [i32; 2] {
         place(anfield, piece)
     }
+}
+
+#[derive(Default, Debug, Clone, Copy)]
+struct PossiblePlacement {
+    pub x: usize,
+    pub y: usize,
+    pub weight: usize,
 }
 
 pub fn place(anfield: &Anfield, piece: &Piece) -> [i32; 2] {

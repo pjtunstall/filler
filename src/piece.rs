@@ -28,13 +28,6 @@ impl Piece {
     }
 }
 
-#[derive(Default, Debug, Clone, Copy)]
-pub struct PossiblePlacement {
-    pub x: usize,
-    pub y: usize,
-    pub weight: usize,
-}
-
 fn parse(raw: Vec<String>) -> Vec<Cell> {
     let mut shape = Vec::new();
 
