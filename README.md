@@ -118,8 +118,8 @@ Ensure that you have Docker installed. If using Docker Desktop, launch it. Navig
 
 ```sh
 cd ../filler./docker_image # Assuming you were in the root of my Rust project.
-docker build -t filler . # `filler` with no dot is will be the name of the container.
-docker run --rm -v "$(pwd)/solution":/filler./solution -it filler
+docker build -t filler . # This `filler` (with no dot) will be the name of the Docker container.
+docker run --rm -v "$(pwd)/solution":/filler./solution -it filler # Run the container `filler`, giving it access to the contents of the folder `filler./solution`.
 ```
 
 You should now be in a shell session inside the container. To run a game, choose a map and two opponents, e.g. to pit my bot against the supplied reigning champion, terminator:
