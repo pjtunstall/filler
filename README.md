@@ -3,6 +3,7 @@
 ![Screenshot from my vizualizer of bots competing at filler.](screenshot.png)
 
 - [Context](#context)
+- (Rules)(#rules)
 - [Versions](#versions)
 - [Usage](#usage)
 - [Tests and error handling](#tests-and-error-handling)
@@ -17,13 +18,13 @@
 
 ## Context
 
-This project is an implementation of the [01Edu version](https://github.com/01-edu/public/tree/master/subjects/filler) of an exercise called filler.
+This project is my response to an 01Edu exercise called [filler](https://github.com/01-edu/public/tree/master/subjects/filler). The challenge is to create a bot (program) that can defeat another bot at a certain game.
 
-The challenge is to create a bot (program) that can defeat another bot at a game played on a rectangular board. We're given several executable files: a so-called "game engine" and four opponents. When run, the game engine will launch the two bots specified by command-line arguments. It will send random shapes (like generalized Tetris shapes) to each bot in turn along with the current state of play. The bot must place this shape on the board in such a way that precisely one cell (character) of the new shape overlaps with one of the shapes it placed previously, thus increasing its territory. It mustn't overlap any cell of the opponents territory.
+## Rules
 
-Points are awarded for every shape placed. The instructions don't say whether shapes are worth equal points.
+We're given several executable files: a so-called "game engine" and four opponents. When run, the game engine will launch the two bots specified by command-line arguments. It will send random shapes (generalized Tetris shapes) to each bot in turn along with the current state of play.
 
-A small technicality, which I'll just mention here to clarify the terminology, is that the shape that a bot receives is actually sent embedded in a rectangle as in the following examples. The surrounding rectangle is referred to as a piece. The instructions offer the following examples of pieces.[^1]
+The shape that a bot receives is sent embedded in a rectangle, referred to as a piece. The instructions offer the following examples of pieces.[^1]
 
 ```
 Piece 2 2:
@@ -42,13 +43,19 @@ OOO...
 O..O..
 ```
 
+The bot must place each piece on the board in accordance with the following conditions:
+
+- Precisely one cell of the new shape should overlap a cell of a shape it placed previously.
+- The newly placed shape must not cover any cell of the opponents territory.
+- It must not extend the player's territory outside the edges of the board.
+
 To place a piece, a bot writes its coordinates (i.e. the coordinates of its top left corner) to stdout, separated by a space and followed by a newline.[^2]
 
-To be valid, a move must not extend the player's territory outside the edges of the board.
+Points are awarded for every shape placed.
 
-Eventually one of the players will run out of space and should then make an illegal move: "If your robot can't place anymore peaces\[sic\] he should still return a result (even if invalid), our robots for example return `0 0\n`, when they can't place any more pieces." The instructions don't say whether this forced invalid move has to be correctly formatted, although this might be implicit in the audit question "Can you confirm that the project runs correctly?" If one player crashes or fails to send anything till the game engine imposes a timeout (by default 10s, but configurable), they lose and the game ends there.
+Eventually one of the players will run out of space and should then make an illegal move: "If your robot can't place anymore peaces\[sic\] he should still return a result (even if invalid), our robots for example return `0 0\n`, when they can't place any more pieces." The instructions don't say whether this forced invalid move has to be correctly formatted, although this is probably implicit in the audit question "Can you confirm that the project runs correctly?" If one player crashes or fails to send anything till the game engine imposes a timeout (by default 10s, but configurable), they lose and the game ends there.
 
-The aim is to defeat three of the given robots on at least four out of five games. Bonus marks are to be had for defeating the most formidable opponent, terminator.
+The aim is to defeat the first three opponents on at least four out of five games. Bonus marks are to be had for defeating the most formidable opponent, terminator.
 
 ## Versions
 
@@ -85,7 +92,7 @@ git clone https://github.com/pjtunstall/filler
 cd filler
 ```
 
-Download the zipped resources [here](https://assets.01-edu.org/filler/filler.zip) from the 01Edu public repo. This would unzip to a folder called `filler`, except that we already have one of that name (my project folder). Assuming you're unzipping it in the same place, it will have to be called something else. For example, for me, on Linux, it unzips automatically to `filler.` with a trailing dot to distinguish it. If the names are distinguished differently on your system, you'll have to adjust any commands that involve `filler.` in what follows. Consider this when troubleshooting!
+Download the zipped resources [here](https://assets.01-edu.org/filler/filler.zip) from the 01Edu public repo. This would unzip to a folder called `filler`, except for the clash with the name of my project. Assuming you're unzipping the resources folder in the same place, it will have to be called something else. For example, for me, on Linux, it unzips automatically to `filler.` with a trailing dot to distinguish it. If the names are distinguished differently for you, you'll have to adjust any commands that involve `filler.` in what follows.
 
 To suppress the warning `JSONArgsRecommended: JSON arguments recommended for ENTRYPOINT to prevent unintended behavior related to OS signals (line 11)` that would otherwise appear when you build the container, change the final line of the Dockerfile from
 
@@ -99,7 +106,7 @@ to
 CMD ["/bin/bash"]
 ```
 
-Inside the root folder of my Rust project, `filler`, compile the binaries for my bot and visualizer:
+If you don't already have the Rust programming language and associated tools on your system, follow the guide [here](https://www.rust-lang.org/learn/get-started). Then, inside the root folder of my project, `filler`, compile the binaries for my bot and visualizer:
 
 ```sh
 cargo build --release
@@ -112,17 +119,19 @@ cp target/release/maximilian ../filler./docker_image/solution/
 cp target/release/visualizer ../filler./docker_image/
 ```
 
-(Remember that trailing `.` in the destination `filler.`.)
+(Remember that trailing `.` in the destination folder `filler.`.)
 
-Ensure that you have Docker installed. If using Docker Desktop, launch it. Navigate into the `docker_image` folder, then build and run the container:[^5]
+Ensure that you have [Docker](https://www.docker.com/get-started/) installed. If using Docker Desktop, launch it. Otherwise, make sure the daemon is running. You can follow the guide at the link just given.
+
+Navigate into the `docker_image` folder, then build and run the container:[^5]
 
 ```sh
 cd ../filler./docker_image # Assuming you were in the root of my Rust project.
-docker build -t filler . # This `filler` (with no dot) will be the name of the Docker container.
-docker run --rm -v "$(pwd)/solution":/filler./solution -it filler # Run the container `filler`, giving it access to the contents of the folder `filler./solution`.
+docker build -t filler . # This `filler` (with no dot) indicates the name you'll give to the Docker container.
+docker run --rm -v "$(pwd)/solution":/filler./solution -it filler # Run the container `filler`, giving it access to the contents of the folder `filler./solution` (where my bot should now be).
 ```
 
-You should now be in a shell session inside the container. To run a game, choose a map and two opponents, e.g. to pit my bot against the supplied reigning champion, terminator:
+(Statements after a `#` are comments; you don't have to type them.) You should now be in a shell session inside the container. To run a game, choose a map and two opponents, e.g. to pit my bot against the supplied opponent called terminator:
 
 ```sh
 ./linux_game_engine -f maps/map01 -p1 solution/maximilian -p2 linux_robots/terminator
@@ -152,7 +161,7 @@ Examples:
   program --duration 75
 ```
 
-You can exit the game at any time with Ctrl+C, or press escape to exit the visualizer. Adjust the scale according to preference, choice of map, and screen size. For me, `-s 10` is good for the biggest map, `map02`. The default `-s 20` works for the medium-sized map, `map01`. For the smallest, `map00`, you could try `-s 40`.
+You can exit the game at any time with Ctrl+C, or press escape to exit the visualizer. Adjust the scale according to preference, choice of map, and screen size. On a 14" screen, for example, a reasonable choice is `-s 10` for the biggest map, `map02`. The default `-s 20` should be okay for the medium-sized map, `map01`. For the smallest, `map00`, you could try `-s 40`.
 
 ## Tests and error handling
 
