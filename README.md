@@ -13,7 +13,7 @@
   - [Can you send negative coordinates?](#can-you-send-negative-coordinates)
   - [Can pieces extend off the bottom or right of the grid?](#can-pieces-extend-off-the-bottom-or-right-of-the-grid)
 - [Strategy](#strategy)
-- [Other strategy ideas](#other-strategy-ideas)
+- [Further](#further)
 - [Notes](#notes)
 
 ## Context
@@ -240,13 +240,13 @@ if cell_distance < 2 {
 
 Given the lack of benefit, I've removed these lines for now.
 
-## Other strategy ideas
+## Further
 
-I've played with the idea of giving maximilian different behavior on the first few moves, such as fanning out, but all the variations I've tried so far make it worse. Maybe there's some other pattern out there that would work.
+I've played with the idea of giving my bot different behavior on the first few moves, such as fanning out. All variations I've tried so far have made it worse.
 
-I've tried [Robin Schramm (wobula)'s](https://github.com/wobula/filler) idea of giving moderate preference to a vertical line dividing the board down the middle. (Like Jani, he gives high preference to cells close to enemy territory. It's not clear to me whether he leaves a border of less desirable cells around the opponent; it looks like maybe not.) However, this caused a deterioration in performance for me: terminator consistently won. It's possible I just didn't find the right weight to give the center line or that there's some other feature of my implementation that's thwarting its effectiveness. Robin's README is well worth a look. The "heatmap" gives an idea of how he's weighting the cells, and his statement of the rules clarifies some points in the official instructions, in particular, the rules concerning bounds.
+I've tried [Robin Schramm (wobula)'s](https://github.com/wobula/filler) idea of giving moderate preference to a vertical line dividing the board down the middle. (Like Jani, he gives high preference to cells close to enemy territory. It's not clear to me whether he leaves a border of less desirable cells around the opponent; it looks like maybe not.) However, this caused a deterioration in performance for me: terminator consistently won. It's possible I just didn't find the right weight to give to the center line or that there's some other feature of my implementation that's thwarting its effectiveness. Robin's README is well worth a look. The "heatmap" gives an idea of how he's weighting the cells, and his statement of the rules clarifies some points in the official instructions, in particular, the rules concerning bounds.
 
-Another 42 School sudent, [Pierre Bondoerffer](https://github.com/pbondoer/42-filler), has a curious remark on his filler README: "Filler's VM wraps the map around, so there's ways to take advantage of that." I'm not sure what he means by this. It can't be that a piece placed so that it extends outside one edge of the board will wrap around to the other side. That would be at odds with the rule that shape cells mustn't extend outside of the playing area. Or, to put it another way, the rule would be superfluous. Indeed, my bot loses by making an erroneous move when I remove the bounds-check condition.
+Another 42 School sudent, [Pierre Bondoerffer](https://github.com/pbondoer/42-filler), has a curious remark on his filler README: "Filler's VM wraps the map around, so there's ways to take advantage of that." I'm not sure what he means by this. It can't be that a piece placed so that it extends outside one edge of the board will wrap around to the other side. That would be at odds with the rule that shape cells mustn't extend outside of the playing area. Indeed, my bot loses by making an erroneous move when I remove the bounds-check condition.
 
 ## Notes
 
