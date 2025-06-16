@@ -59,17 +59,15 @@ The aim is to defeat the first three opponents on at least four out of five game
 
 ## Versions
 
-This project is my attempt at the [01Edu version](https://github.com/01-edu/public/tree/master/subjects/filler) / [01Founders version](https://learn.01founders.co/intra/london/div-01/filler) of the exercise, which is similar to the 42 School Instructions [English](https://github.com/VBrazhnik/Filler/blob/master/filler.en.pdf) / [French](https://github.com/ivankozlovcodes/filler/blob/master/resources/filler.pdf).
+This project is my attempt at the [01Founders version](https://learn.01founders.co/intra/london/div-01/filler) of the exercise. There are also [01Edu](https://github.com/01-edu/public/tree/master/subjects/filler) and the 42 School versions: [English](https://github.com/VBrazhnik/Filler/blob/master/filler.en.pdf) / [French](https://github.com/ivankozlovcodes/filler/blob/master/resources/filler.pdf).
 
-One clear difference between the two versions of the exercise is that the 42 School version is to be written in C, whereas the 01Edu version uses Rust and is required to run in a Docker container.
+One clear difference is that the 42 School version is to be written in C, whereas the 01Founders and 01Edu versions use Rust. In addition, ours requires the use of Docker.
 
-One potential difference is that their version of the game is said to stop as soon as one player can't make a legal move, whereas ours continues alowing the other player to place pieces (and hence collect points) as long as they can after that. I say "potential" because there are some contradictions over this rule. The 42 School instructions say, "The game stops at the first error: either when a game piece cannot be placed anymore or it has been wrongly placed." ("La partie s'arrête à la première erreur: dès qu'une pièce ne peut plus posée ou a été mal posée.") On the other hand, [Ivan Kozlov](https://github.com/ivankozlovcodes/filler/blob/master/resources/usage.gif) at 42 School Silicon Valley in 2018 shows the game continuing in an animated example of his visualizer in action, and [Jani Mäkelä](https://github.com/dal-yth/Filler) at Hive-Helsinki in 2020 remarks, "This repository has both the new (vm2) and old (vm) game masters [i.e. game engines], it is recommended to use the old one (filler_vm.rb) since the new one does not work well with the champions provided. Some of the champions refuse to place any pieces with the new executable and it also stops the game before the winning[^3] player can attempt to fill out the remaining field."[^4]
+One apparent difference is that the 42 School game is said to stop as soon as one player can't make a legal move, whereas ours continues allowing the other player to place pieces (and hence collect points) as long as they can after that. I say "apparent" because the evidence is contradictory. The 42 School instructions say, "The game stops at the first error: either when a game piece cannot be placed anymore or it has been wrongly placed." ("La partie s'arrête à la première erreur: dès qu'une pièce ne peut plus posée ou a été mal posée.") On the other hand, [Ivan Kozlov](https://github.com/ivankozlovcodes/filler/blob/master/resources/usage.gif) at 42 School Silicon Valley in 2018 shows the game continuing in an animated example of his visualizer in action, and [Jani Mäkelä](https://github.com/dal-yth/Filler) at Hive-Helsinki in 2020 remarks, "This repository has both the new (vm2) and old (vm) game masters [i.e. game engines], it is recommended to use the old one (filler_vm.rb) since the new one does not work well with the champions provided. Some of the champions refuse to place any pieces with the new executable and it also stops the game before the winning[^3] player can attempt to fill out the remaining field."[^4] On balance, then, it seems that the 42 School filler probably does let the other player continue after the first has got stuck, just as ours does, in spite of the clear instruction to the contrary!
 
-On balance, then, it seems that the 42 School filler probably does let the other player continue after the first has got stuck, in spite of the clear statement to the contrary in its instructions!
+There are also some trivial differences: 42 School calls the board "plateau" (in both English and French), while 01Founders/01Edu call it "Anfield", and different characters are used for the territories of the two players, their latest moves, and the characters that make up the shape of a new piece.
 
-There are also some trivial differences: 42 School calls the board "plateau" (in both English and French), while 01Edu calls it "Anfield", and different characters are used for the territories of the two players, their latest moves, and the characters that make up the shape of a new piece.
-
-I'd say the 42 School instructions still worth reading even if your objective is only to understand the 01Edu version. They're more detailed than those of 01Edu--see especially the longer example of gameplay in §V.4.3.
+I'd say the 42 School instructions still worth reading even if your objective is only to understand the 01Edu version. They're more detailed than those of 01Founders/01Edu--see especially the longer example of gameplay in §V.4.3.
 
 ```
 | Meaning              |  01Edu  | 42 School |
@@ -92,7 +90,7 @@ git clone https://github.com/pjtunstall/filler
 cd filler
 ```
 
-Download the zipped resources [here](https://assets.01-edu.org/filler/filler.zip) from the 01Edu public repo. This would unzip to a folder called `filler`, except for the clash with the name of my project. Assuming you're unzipping the resources folder in the same place, it will have to be called something else. For example, for me, on Linux, it unzips automatically to `filler.` with a trailing dot to distinguish it. If the names are distinguished differently for you, you'll have to adjust any commands that involve `filler.` in what follows.
+Download the zipped resources [here](https://assets.01-edu.org/filler/filler.zip) from the 01Edu public repo. This would unzip to a folder called `filler`, except for the clash with the name of my project. Move the `docker_image` folder from the unzipped resources folder to the same location as my project `filler`, and delete the resources folder to avoid confusion.[^5]
 
 To suppress the warning `JSONArgsRecommended: JSON arguments recommended for ENTRYPOINT to prevent unintended behavior related to OS signals (line 11)` that would otherwise appear when you build the container, change the final line of the Dockerfile from
 
@@ -115,28 +113,25 @@ cargo build --release
 Move or copy them to the appropriate destinations:
 
 ```sh
-cp target/release/maximilian ../filler./docker_image/solution/
-cp target/release/visualizer ../filler./docker_image/
+cp target/release/maximilian ../docker_image/solution/
+cp target/release/visualizer ../docker_image/
 ```
-
-(Remember that trailing `.` in the destination folder `filler.`.)
 
 Ensure that you have [Docker](https://www.docker.com/get-started/) installed. If using Docker Desktop, launch it. Otherwise, make sure the daemon is running. You can follow the guide at the link just given.
 
-Navigate into the `docker_image` folder, then build and run the container:
+Navigate into the `docker_image` folder and build the image there:
 
 ```sh
-cd ../filler./docker_image # Assuming you were in the root of my Rust project.
-docker build -t filler . # This `filler` (with no dot) indicates the name you'll give to the Docker container.
+docker build -t filler .
 ```
 
-(Statements after a `#` are comments; you don't have to type them.) Run the container, giving it access to the contents of the folder `filler./solution` where my bot should now be:[^5]
+Run the corresponding container, giving it access to the contents of the `solution` folder where my bot should now be:[^6]
 
 ```sh
-docker run --rm -v "$(pwd)/solution":/filler./solution -it filler
+docker run --rm -v "$(pwd)/solution":/filler/solution -it filler
 ```
 
-You should now be in a shell session inside the container. To run a game, choose a map and two opponents, e.g. to pit my bot against the supplied opponent called terminator:
+You should now be in a shell session based in the container. To run a game, choose a map and two opponents, e.g. to pit my bot against the supplied opponent called terminator:
 
 ```sh
 ./linux_game_engine -f maps/map01 -p1 solution/maximilian -p2 linux_robots/terminator
@@ -224,7 +219,7 @@ Originally, for simpicity, I just picked the position whose top-left corner was 
 
 My current strategy is essentially that of [Jani Mäkelä](https://github.com/dal-yth/Filler), although I haven't looked at his implementation yet.
 
-On each turn, my bot, [maximilian](https://en.wikipedia.org/wiki/The_Black_Hole_(1979_film)), considers all possible locations to place the piece. For the valid positions, it weights each of its shape cells, giving them a higher score the closer they are to the opponent's territory. (It uses breadth-first search to find the distance to the nearest enemy cell.) It adds together the scores for each cell and choses the position that maximizes this sum. The purpose of this is to place as many cells as close as possible to the opposing bot to constrain it.[^6]
+On each turn, my bot, [maximilian](https://en.wikipedia.org/wiki/The_Black_Hole_(1979_film)), considers all possible locations to place the piece. For the valid positions, it weights each of its shape cells, giving them a higher score the closer they are to the opponent's territory. (It uses breadth-first search to find the distance to the nearest enemy cell.) It adds together the scores for each cell and choses the position that maximizes this sum. The purpose of this is to place as many cells as close as possible to the opposing bot to constrain it.[^7]
 
 That beats the weaker bots and is equal to terminator.
 
@@ -254,5 +249,6 @@ Another 42 School sudent, [Pierre Bondoerffer](https://github.com/pbondoer/42-fi
 [^2]: The "coordinates" of a piece are nowhere definied explicitly, as far as I can see, but can be inferred from the fact that `7 2\n` is a legitimate way to place `.OO.` in the example of the [Usage](https://github.com/01-edu/public/tree/master/subjects/filler#usage) section, given that the player's territory so far consists of just one cell, `9 2`.
 [^3]: When one player gets stuck, the other doesn't necessarily win. The first player to get stuck might still have more more points at the end.
 [^4]: The latter possibility seems more in keeping with the variety of strategies that Jani considers an interesting quality of the game: "... you can approach it in so many different ways. Perhaps your algorithm attempts to seal off half of the map and survive until the bitter end, perhaps you try to box your opponent in so they can't place any more pieces or maybe you try to breach into your opponents area and take over the space they were saving for late game."
-[^5]: I've added `--rm` after `docker run` so that the container will be automatically deleted when it exits. The command as given in the instructions is simply `docker run -v "$(pwd)/solution":/filler./solution -it filler` (except that `filler.` is just `filler` for them).
-[^6]: I chose this technique over just finding the minimum distance out of all the cells of the piece to be placed because I wanted to favor, for example, putting a long shape parallel to the border of the opponent's territory rather than end-on to it. That said, having compared the two, I'm not convinced there's any real difference in performance.
+[^5] We already have the following items all called filler: the exercise (not counting the three versions), the game, my implementation of the project, and the Docker container--I think we can do without one more!
+[^6]: I've added `--rm` after `docker run`, for the sake of tidiness, so that the container will be automatically deleted when it exits. The command as given in the instructions is simply `docker run -v "$(pwd)/solution":/filler/solution -it filler`. This will work too.
+[^7]: I chose this technique over just finding the minimum distance out of all the cells of the piece to be placed because I wanted to favor, for example, putting a long shape parallel to the border of the opponent's territory rather than end-on to it. That said, having compared the two, I'm not convinced there's any real difference in performance.
