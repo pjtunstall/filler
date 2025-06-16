@@ -3,7 +3,7 @@
 ![Screenshot from my vizualizer of bots competing at filler.](screenshot.png)
 
 - [Context](#context)
-- (Rules)(#rules)
+- [Rules](#rules)
 - [Versions](#versions)
 - [Usage](#usage)
 - [Tests and error handling](#tests-and-error-handling)
