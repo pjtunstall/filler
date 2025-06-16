@@ -123,15 +123,20 @@ cp target/release/visualizer ../filler./docker_image/
 
 Ensure that you have [Docker](https://www.docker.com/get-started/) installed. If using Docker Desktop, launch it. Otherwise, make sure the daemon is running. You can follow the guide at the link just given.
 
-Navigate into the `docker_image` folder, then build and run the container:[^5]
+Navigate into the `docker_image` folder, then build and run the container:
 
 ```sh
 cd ../filler./docker_image # Assuming you were in the root of my Rust project.
 docker build -t filler . # This `filler` (with no dot) indicates the name you'll give to the Docker container.
-docker run --rm -v "$(pwd)/solution":/filler./solution -it filler # Run the container `filler`, giving it access to the contents of the folder `filler./solution` (where my bot should now be).
 ```
 
-(Statements after a `#` are comments; you don't have to type them.) You should now be in a shell session inside the container. To run a game, choose a map and two opponents, e.g. to pit my bot against the supplied opponent called terminator:
+(Statements after a `#` are comments; you don't have to type them.) Run the container, giving it access to the contents of the folder `filler./solution` where my bot should now be:[^5]
+
+```sh
+docker run --rm -v "$(pwd)/solution":/filler./solution -it filler
+```
+
+You should now be in a shell session inside the container. To run a game, choose a map and two opponents, e.g. to pit my bot against the supplied opponent called terminator:
 
 ```sh
 ./linux_game_engine -f maps/map01 -p1 solution/maximilian -p2 linux_robots/terminator
