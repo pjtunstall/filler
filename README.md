@@ -18,7 +18,7 @@
 
 ## Context
 
-This project is my response to an 01Edu exercise called [filler](https://github.com/01-edu/public/tree/master/subjects/filler). The challenge is to create a bot (program) that can defeat another bot at a certain game.
+This project is my response to the 01Founders/01Edu exercise called [filler](https://github.com/01-edu/public/tree/master/subjects/filler). The challenge is to create a bot (program) that can defeat another bot at a certain game.
 
 ## Rules
 
