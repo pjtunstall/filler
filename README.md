@@ -67,7 +67,7 @@ One apparent difference is that the 42 School game is said to stop as soon as on
 
 There are also some trivial differences: 42 School calls the board "plateau" (in both English and French), while 01Founders/01Edu call it "Anfield", and different characters are used for the territories of the two players, their latest moves, and the characters that make up the shape of a new piece.
 
-I'd say the 42 School instructions still worth reading even if your objective is only to understand the 01Edu version. They're more detailed than those of 01Founders/01Edu--see especially the longer example of gameplay in §V.4.3.
+I'd say the 42 School instructions are still worth reading even if your objective is only to understand the 01Edu version. They're more detailed than those of 01Founders/01Edu--see especially the longer example of gameplay in §V.4.3.
 
 ```
 | Meaning              |  01Edu  | 42 School |
