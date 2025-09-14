@@ -59,7 +59,7 @@ The aim is to defeat the first three opponents on at least four out of five game
 
 ## Versions
 
-This project is my attempt at the [01Founders version](https://learn.01founders.co/intra/london/div-01/filler) of the exercise. There are also [01Edu](https://github.com/01-edu/public/tree/master/subjects/filler) and the 42 School versions: [English](https://github.com/VBrazhnik/Filler/blob/master/filler.en.pdf) / [French](https://github.com/ivankozlovcodes/filler/blob/master/resources/filler.pdf).
+This project is my attempt at the 01Founders version of the exercise, which is essentially the same as the [01Edu version](https://github.com/01-edu/public/tree/master/subjects/filler), and not far removed from that of 42 School: [English](https://github.com/VBrazhnik/Filler/blob/master/filler.en.pdf) / [French](https://github.com/ivankozlovcodes/filler/blob/master/resources/filler.pdf). Sadly a 01Founders account is needed to view [their version](https://learn.01founders.co/intra/london/div-01/filler).
 
 One clear difference is that the 42 School version is to be written in C, whereas the 01Founders and 01Edu versions use Rust. In addition, ours requires the use of Docker.
 
